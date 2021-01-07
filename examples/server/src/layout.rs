@@ -53,38 +53,20 @@ pub const LAYOUT_HEADER: &'static str = r##"
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="blog-logo navbar-brand" href="">My Blog</a>
+                <a class="blog-logo navbar-brand" href="">FakeMyAs</a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="v-nav navbar-nav mr-auto">
                         <!-- <li class="v-nav-item nav-item active"><a class="nav-link" href="">Home <span class="sr-only">(current)</span></a></li> -->
 
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/">Home</a></li>
-                        <li class="v-nav-item nav-item"><a class="nav-link" href="/tags">Tags</a></li>
-                        <li class="v-nav-item nav-item"><a class="nav-link" href="/admin">Login</a></li>
-                            
-                            
-                        <li class="v-nav-item nav-item dropdown">
-                            <a class="v-nav-login nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                User Name
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                
-                                  <a class="dropdown-item active" href="/admin">Admin Dashboard</a>
-                                  <a class="dropdown-item" href="/create">New Post</a>
-                                  <div class="dropdown-divider"></div>
-                                  <a class="dropdown-item" href="/logout">Logout</a>
-                                <!-- <a class="dropdown-item" href="#">Something else here</a> -->
-                            </div>
-                        </li>
-                        
-                        
+                        <li class="v-nav-item nav-item active"><a class="nav-link" href="/map">Map</a></li>
+                        <li class="v-nav-item nav-item active"><a class="nav-link" href="/spoofing">Spoofing</a></li>
+                        <li class="v-nav-item nav-item active"><a class="nav-link" href="/logout">Logout</a></li>
+                                                  
                         <!-- <li class="v-nav-item nav-item"><a class="nav-link disabled" href="#">Disabled</a></li> -->
                     </ul>
-                    <form id="search-form" action="search" method="get" class="form-inline my-2 my-lg-0">
-                        <input name="q" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+                    
                 </div>
             </nav>
                 <div id="v-body">
@@ -109,10 +91,9 @@ pub const LAYOUT_HEADER: &'static str = r##"
 pub const LAYOUT_FOOTER: &'static str = r##"
                     </div>
                     <footer id="v-footer">
-                        <div class="v-copyright">Design &copy; 2017 Andrew Prindle | <a>RSS</a></div>
+                        <div class="v-copyright"> GPS Spoofing as a Service | GPSSaaS</div>
                         <!-- <div class="v-generation-time">Generated in  seconds</div> -->
-                        
-                        <!-- Design (c) 2017 Andrew Prindle -->
+                        <!-- Design (c) 2020-2021 Maxime GAUTHIER - Léandre NGUYEN-MULLER - Adrien MIGNEROT - Hugo BRUNA - Thérèse FILI -->
                     </footer>
                 </div>
             </div>
@@ -136,7 +117,7 @@ pub fn layout_form(url: &str) -> String {
     format!(r##"
                         <form id="needs-validation" action="{url}" name="login_form" method="post" novalidate>
                             <div class="form-group" id="userGroup">
-                                <label for="usernameField">Email Address</label>
+                                <label for="usernameField">User Name</label>
                                 <div class="col-md-9 mb-3">
                                     <input type="text" name="username" value="" class="form-control" id="usernameField" aria-describedby="idHelp" placeholder="Username" required>
                                     <div class="invalid-feedback">
