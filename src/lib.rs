@@ -28,7 +28,6 @@
         the basic sanitization methods in the sanitization module
         but can be overloaded when using in other crates to allow
         more customized security.
-
 */
 
 #![feature(proc_macro_hygiene, decl_macro)]
@@ -43,6 +42,3 @@ extern crate unic_ucd;
 extern crate htmlescape;
 pub mod authorization;
 pub mod sanitization;
-
-
-

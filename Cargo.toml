@@ -37,6 +37,8 @@ unic-ucd = "0.6.0"
 # unic-ucd-category = "0.6.0"
 # lazy_static = "0.2.8"
 # regex = "0.2.2"
+rust-crypto = "^0.2"
+
 [dev-dependencies]
 serde_json = "1.0"
 serde = {version = "1.0", features = ["derive"]}

@@ -11,6 +11,8 @@ extern crate htmlescape;
 #[allow(unused_imports)] #[macro_use] extern crate serde_json;
 
 extern crate rocket_auth_login as auth;
+//For hash
+extern crate crypto;
 
 use auth::authorization::*;
 use rocket::response::{NamedFile, Redirect, Flash};
@@ -28,6 +30,7 @@ use layout::*;
 const URL: &'static str = "http://localhost:8000";
 const LOGIN_URL: &'static str = "http://localhost:8000/login";
 
+//Display the message when logged in, or display the form to log in
 #[get("/login", rank = 1)]
 fn logged_in(_user: AuthCont<AdministratorCookie>) -> Html<String> {
     layout("You are logged in.")
@@ -37,47 +40,13 @@ fn login() -> Html<String> {
     layout(&layout_form(LOGIN_URL))
 }
 
-
-/// if there is a user query string, and an optional flash message
-/// display an optional flash message indicating why the login failed
-/// and the login screen with user filled in
-#[get("/login?<user>")]
-fn retry_login_user(user: UserQuery, flash_msg_opt: Option<FlashMessage>) -> Html<String> {
-    let login_form = layout_retry_form(LOGIN_URL, &user.user);
-    let alert;
-    if let Some(flash) = flash_msg_opt {
-        alert = alert_danger(flash.msg());
-    } else { 
-        alert = String::new();
-    }
-    let mut contents = String::with_capacity(login_form.len() + alert.len() + 20);
-    contents.push_str(&alert);
-    contents.push_str("\n");
-    contents.push_str(&login_form);
-    layout(&contents)
-    
-}
-
-/// if there is a flash message but no user query string
-/// display why the login failed and display the login screen
-#[get("/login", rank = 3)]
-fn retry_login_flash(flash_msg: FlashMessage) -> Html<String> {
-    println!("Retrying login...");
-    let login_form = layout_form(LOGIN_URL);
-    let alert = alert_danger(flash_msg.msg());
-    let mut contents = String::with_capacity(login_form.len() + alert.len() + 20);
-    contents.push_str(&alert);
-    contents.push('\n');
-    contents.push_str(&login_form);
-    layout(&contents)
-}
-
+//Retrieve the user's information to post them and then redirect
 #[allow(unused_mut)]
 #[post("/login", data = "<form>")]
 fn process_login(form: Form<LoginCont<AdministratorForm>>, mut cookies: Cookies) -> Result<Redirect, Flash<Redirect>> {
     let inner = form.into_inner();
     let login = inner.form;
-    login.flash_redirect("/login", "/login", &mut cookies)
+    login.flash_redirect("/", "/", &mut cookies) // "/", "/" pour rediriger sur home
 }
 
 #[get("/logout")]
@@ -88,6 +57,16 @@ fn logout(admin: Option<AdministratorCookie>, mut cookies: Cookies) -> Result<Fl
     } else {
         Err(Redirect::to("/login"))
     }
+}
+
+#[get("/map", rank = 1)]
+fn map(_user: AuthCont<AdministratorCookie>) -> Html<String>  {
+    layout("OK map")
+}
+//If not connected
+#[get("/map", rank = 2)]
+fn login_map() -> Html<String> {
+    layout(&layout_form(LOGIN_URL))
 }
 
 
@@ -103,16 +82,15 @@ fn index(admin_opt: Option<AdministratorCookie>, flash_msg_opt: Option<FlashMess
         }
     }
     if let Some(admin) = admin_opt {
-        contents.push_str(&format!("Welcome {}", admin.username));
+        contents.push_str(r#"<a href="/map">Get my position</a><br></br>"#); //rediriger vers page intermédiaire avec bouton spoofing ou get my position
+        contents.push_str(r#"<a href="/spoofing">Spoofing</a>"#);
     } else {
-        contents.push_str(r#"<a href="/login">Login</a>"#);
+        contents.push_str(r#"<a href="/login">Login</a>"#); //mettre directement le form pour se logger
     }
     layout(&contents)
 }
 
-/// static_files() is needed to serve css/js/font files
-/// all static files should be placed in a folder, ex. static
-/// this prevents directory traversal attacks but still
+
 /// allows static files to be served easily
 #[get("/<file..>", rank=10)]
 fn static_files(file: PathBuf) -> Option<NamedFile> {
@@ -121,20 +99,16 @@ fn static_files(file: PathBuf) -> Option<NamedFile> {
 
 fn main() {
         rocket::ignite()
-        
-        // If using a database connection:
-        // .manage(data::init_pg_pool())
-        
         // using rocket_contrib's Templates
         // .attach(Template::fairing())
         .mount("/", routes![
             logged_in,
             login,
-            retry_login_user,
-            retry_login_flash,
             process_login,
             logout,
             index,
+            map,
+            login_map,
             static_files
         ])
         .launch();

@@ -1,7 +1,14 @@
-
 use rocket::{Request, Outcome};
 use rocket::request::FromRequest;
 use std::collections::HashMap;
+
+
+//use whirlpool::{Whirlpool, Digest};
+use std::io::Read;
+extern crate crypto;
+use crypto::digest::Digest;
+use crypto::sha3::Sha3;
+
 // use rocket::{Request, Data, Outcome, Response};
 // use rocket::http::{Cookie, Cookies, MediaType, ContentType, Status, RawStr};
 // use rocket::request::{FlashMessage, Form, FromRequest,FromForm, FormItems, FromFormValue, FromParam};
@@ -89,13 +96,27 @@ impl AuthorizeCookie for AdministratorCookie {
     }
 }
 
+  fn read_file(filename : &str) -> String {
+    let mut file = std::fs::File::open(filename).unwrap();
+     let mut contents = String::new();
+     file.read_to_string(&mut contents).unwrap();
+     contents
+  }
+  
+  fn hash(password: &String) -> String {
+    let mut hasher = Sha3::sha3_256();
+    hasher.input_str(password);
+    hasher.result_str()
+}
+
+/*CEST ICI QUON CHECK LE PASSWORD*/
 impl AuthorizeForm for AdministratorForm {
     type CookieType = AdministratorCookie;
     
     /// Authenticate the credentials inside the login form
     fn authenticate(&self) -> Result<Self::CookieType, AuthFail> {
         println!("Authenticating {} with password: {}", &self.username, &self.password);
-        if &self.username == "administrator" && &self.password != "" {
+        if &self.username == "administrator" && hash(&self.password) != "2493dc594b462c067d7638fa94e5b3d565757245ec3ba873d036c3fb1ddf10a6" {
             Ok(
                 AdministratorCookie {
                     userid: 1,
@@ -125,14 +146,6 @@ impl<'a, 'r> FromRequest<'a, 'r> for AdministratorCookie {
     
     /// The from_request inside the file defining the custom data types
     /// enables the type to be checked directly in a route as a request guard
-    /// 
-    /// This is not needed but highly recommended.  Otherwise you would need to use:
-    /// 
-    /// `#[get("/protected")] fn admin_page(admin: AuthCont<AdministratorCookie>)`
-    /// 
-    /// instead of:
-    /// 
-    /// `#[get("/protected")] fn admin_page(admin: AdministratorCookie)`
     fn from_request(request: &'a Request<'r>) -> ::rocket::request::Outcome<AdministratorCookie,Self::Error>{
         let cid = AdministratorCookie::cookie_id();
         let mut cookies = request.cookies();

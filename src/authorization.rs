@@ -1,3 +1,4 @@
+//File used by main.rs to verify the user's info and allow him to navigate when logged in
 
 use rocket::{Request, Outcome};
 use rocket::response::{Redirect, Flash};
@@ -63,102 +64,7 @@ pub trait CookieId {
     }
 }
 
-/// ## Cookie Data
-/// The AuthorizeCookie trait is used with a custom data structure that
-/// will contain the data in the cookie.  This trait provides methods
-/// to store and retrieve a data structure from a cookie's string contents.
-/// 
-/// Using a request guard a route can easily check whether the user is
-/// a valid Administrator or any custom user type.
-/// 
-/// ### Example
-///
-/// ```no_run
-///     # #![feature(proc_macro_hygiene, decl_macro)]
-///     # #[macro_use]
-///     # extern crate rocket;
-///     # extern crate serde_json;
-///     # #[macro_use]
-///     # extern crate serde;
-///     use rocket::{Request, Outcome};
-///     use rocket::request::FromRequest;
-///     use rocket::response::content::Html;
-///     use rocket_auth_login::authorization::*;
-///     // Define a custom data type that hold the cookie information
-///     #[derive(Deserialize, Serialize)]
-///     pub struct AdministratorCookie {
-///         pub userid: u32,
-///         pub username: String,
-///         pub display: String,
-///     }
-///     
-///     // Implement CookieId for AdministratorCookie
-///     impl CookieId for AdministratorCookie {
-///         fn cookie_id<'a>() -> &'a str {
-///             "asid"
-///         }
-///     }
-///     
-///     // Implement AuthorizeCookie for the AdministratorCookie
-///     // This code can be changed to use other serialization formats
-///     impl AuthorizeCookie for AdministratorCookie {
-///         fn store_cookie(&self) -> String {
-///             ::serde_json::to_string(self).expect("Could not serialize structure")
-///         }
-///         fn retrieve_cookie(string: String) -> Option<Self> {
-///             let mut des_buf = string.clone();
-///             let des: Result<AdministratorCookie, _> = ::serde_json::from_str(&mut des_buf);
-///             des.ok()
-///         }
-///     }
-///     
-///     // Implement FromRequest for the Cookie type to allow direct
-///     // use of the type in routes, instead of through AuthCont
-///     // 
-///     // The only part that needs to be changed is the impl and 
-///     // function return type; the type should match your struct
-///     impl<'a, 'r> FromRequest<'a, 'r> for AdministratorCookie {
-///         type Error = ();
-///         // Change the return type to match your type
-///         fn from_request(request: &'a Request<'r>) -> ::rocket::request::Outcome<AdministratorCookie,Self::Error>{
-///             let cid = AdministratorCookie::cookie_id();
-///             let mut cookies = request.cookies();
-///         
-///             match cookies.get_private(cid) {
-///                 Some(cookie) => {
-///                     if let Some(cookie_deserialized) = AdministratorCookie::retrieve_cookie(cookie.value().to_string()) {
-///                         Outcome::Success(
-///                             cookie_deserialized
-///                         )
-///                     } else {
-///                         Outcome::Forward(())
-///                     }
-///                 },
-///                 None => Outcome::Forward(())
-///             }
-///         }
-///     }
-///     
-///     // In your route use the AdministratorCookie request guard to ensure
-///     // that only verified administrators can reach a page
-///     #[get("/administrator", rank=1)]
-///     fn admin_page(admin: AdministratorCookie) -> Html<String> {
-///         // Show the display field in AdminstratorCookie as defined above
-///         Html( format!("Welcome adminstrator {}!", admin.display) )
-///     }
-///     #[get("/administrator", rank=2)]
-///     fn admin_login_form() -> Html<String> {
-///         // Html form here, see the example directory for a complete example
-///         unimplemented!()
-///     }
-///     
-///     fn main() {
-///         rocket::ignite().mount("/", routes![admin_page, admin_login_form]).launch();
-///     }
-///     
-/// ```
-/// 
-
+//Implementation of the cookie trait
 pub trait AuthorizeCookie : CookieId {
     /// Serialize the cookie data type - must be implemented by cookie data type
     fn store_cookie(&self) -> String;
@@ -175,114 +81,6 @@ pub trait AuthorizeCookie : CookieId {
         );
     }
 }
-
-
-/// ## Form Data
-/// The AuthorizeForm trait handles collecting a submitted login form into a
-/// data structure and authenticating the credentials inside.  It also contains
-/// default methods to process the login and conditionally redirecting the user
-/// to the correct page depending upon successful authentication or failure.
-///
-/// ### Authentication Failure
-/// Upon failure the user is redirected to a page with a query string specified
-/// by the `fail_url()` method.  This allows the specified username to persist
-/// across attempts.
-///
-/// ### Flash Message
-/// The `flash_redirect()` method redirects the user but also adds a cookie
-/// called a flash message that once read is deleted immediately.  This is used
-/// to indicate why the authentication failed.  If the user refreshes the page
-/// after failing to login the message that appears above the login indicating
-/// why it failed will disappear.  To redirect without a flash message use the
-/// `redirect()` method instead of `flash_redirect()`.
-///
-/// ## Example
-/// ```
-///     # #![feature(proc_macro_hygiene, decl_macro)]
-///     # #[macro_use]
-///     # extern crate rocket;
-///     # extern crate serde_json;
-///     use rocket::{Request, Outcome};
-///     use std::collections::HashMap;
-///     use rocket_auth_login::authorization::*;
-///     # #[macro_use]
-///     # extern crate serde;
-///     // Create the structure that will contain the login form data
-///     #[derive(Debug, Clone, Serialize, Deserialize)]
-///     pub struct AdministratorForm {
-///         pub username: String,
-///         pub password: String,
-///     }
-///     # #[derive(Serialize, Deserialize)]
-///     # pub struct AdministratorCookie {
-///     #     pub userid: u32,
-///     #     pub username: String,
-///     #     pub display: String,
-///     # }
-///     # impl CookieId for AdministratorCookie {
-///     #  fn cookie_id<'a>() -> &'a str { "acid" }
-///     # }
-///     # impl AuthorizeCookie for AdministratorCookie {
-///     #     fn store_cookie(&self) -> String {
-///     #         ::serde_json::to_string(self).expect("Could not serialize structure")
-///     #     }
-///     #     fn retrieve_cookie(string: String) -> Option<Self> {
-///     #         let mut des_buf = string.clone();
-///     #         let des: Result<AdministratorCookie, _> = ::serde_json::from_str(&mut des_buf);
-///     #         des.ok()
-///     #     }
-///     # }
-///
-///     
-///     // Ipmlement CookieId for the form structure
-///     impl CookieId for AdministratorForm {
-///         fn cookie_id<'a>() -> &'a str {
-///             "acid"
-///         }
-///     }
-///     
-///     // Implement the AuthorizeForm for the form structure
-///     impl AuthorizeForm for AdministratorForm {
-///         type CookieType = AdministratorCookie;
-///         
-///         /// Authenticate the credentials inside the login form
-///         fn authenticate(&self) -> Result<Self::CookieType, AuthFail> {
-///             // The code in this function should be replace with whatever
-///             // you use to authenticate users.
-///             println!("Authenticating {} with password: {}", &self.username, &self.password);
-///             if &self.username == "administrator" && &self.password != "" {
-///                 Ok(
-///                     AdministratorCookie {
-///                         userid: 1,
-///                         username: "administrator".to_string(),
-///                         display: "Administrator".to_string(),
-///                     }
-///                 )
-///             } else {
-///                 Err(
-///                     AuthFail::new(self.username.to_string(), "Incorrect username".to_string())
-///                 )
-///             }
-///         }
-///         
-///         /// Create a new login form instance
-///         fn new_form(user: &str, pass: &str, _extras: Option<HashMap<String, String>>) -> Self {
-///             AdministratorForm {
-///                 username: user.to_string(),
-///                 password: pass.to_string(),
-///             }
-///         }
-///     }
-///     
-///     # fn main() {}
-///     
-/// ```
-/// 
-/// # Example Code
-/// For more detailed example please see the example directory.
-/// The example directory contains a fully working example of processing
-/// and checking login information.
-/// 
 
 pub trait AuthorizeForm : CookieId {
     type CookieType: AuthorizeCookie;
@@ -371,7 +169,7 @@ pub trait AuthorizeForm : CookieId {
         }
     }
     
-    /// Redirect the user to one page on successful authentication or
+    /*/// Redirect the user to one page on successful authentication or
     /// another page if authentication fails.
     fn redirect(&self, ok_redir: &str, err_redir: &str, cookies: &mut Cookies) -> Result<Redirect, Redirect> {
         match self.authenticate() {
@@ -390,7 +188,7 @@ pub trait AuthorizeForm : CookieId {
                 Err( Redirect::to(furl) )
             },
         }
-    }
+    }*/
 }
 
 impl<T: AuthorizeCookie + Clone> AuthCont<T> {
@@ -402,48 +200,6 @@ impl<T: AuthorizeCookie + Clone> AuthCont<T> {
 }
 
 
-/// # Request Guard
-/// Request guard for the AuthCont (Authentication Container).
-/// This allows a route to call a user type like:
-/// 
-/// ```rust,no_run
-/// 
-///     # #![feature(proc_macro_hygiene, decl_macro)]
-///     # #[macro_use]
-///     # extern crate rocket;
-///     # #[macro_use]
-///     # extern crate serde;
-///     # use rocket::response::content::Html;
-///     use rocket_auth_login::authorization::*;
-///
-/// 
-///     # #[derive(Deserialize)]
-///     # pub struct AdministratorCookie {
-///     # }
-///     # impl CookieId for AdministratorCookie {
-///     #  fn cookie_id<'a>() -> &'a str { "acid" }
-///     # }
-///     # impl AuthorizeCookie for AdministratorCookie {
-///     #     fn store_cookie(&self) -> String {
-///     #         unimplemented!()
-///     #     }
-///     #     fn retrieve_cookie(string: String) -> Option<Self> {
-///     #         unimplemented!()
-///     #     }
-///     # }
-///
-///     #[get("/protected")]
-///     fn protected(container: AuthCont<AdministratorCookie>) -> Html<String> {
-///         let admin = container.cookie;
-///         Html(String::new())
-///     }
-///     
-///     # fn main() {
-///     #    rocket::ignite().mount("/", routes![]).launch();
-///     # }
-///     
-/// ```
-/// 
 impl<'a, 'r, T: AuthorizeCookie> FromRequest<'a, 'r> for AuthCont<T> {
     type Error = ();
     
