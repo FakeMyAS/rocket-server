@@ -82,12 +82,12 @@ fn index(admin_opt: Option<AdministratorCookie>, flash_msg_opt: Option<FlashMess
         }
     }
     if let Some(admin) = admin_opt {
-        contents.push_str(r#"<a href="/map">Get my position</a><br></br>"#); //rediriger vers page intermédiaire avec bouton spoofing ou get my position
+        contents.push_str(r#"<a href="/map">Get my position</a><br></br>"#); //redirect to the home page with a spoofing and get my position bouton
         contents.push_str(r#"<a href="/spoofing">Spoofing</a>"#);
+        layout(&contents)
     } else {
-        contents.push_str(r#"<a href="/login">Login</a>"#); //mettre directement le form pour se logger
+        layout(&layout_form(LOGIN_URL)) //put directly the form
     }
-    layout(&contents)
 }
 
 
