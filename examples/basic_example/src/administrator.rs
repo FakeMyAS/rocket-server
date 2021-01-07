@@ -116,7 +116,7 @@ impl AuthorizeForm for AdministratorForm {
     /// Authenticate the credentials inside the login form
     fn authenticate(&self) -> Result<Self::CookieType, AuthFail> {
         println!("Authenticating {} with password: {}", &self.username, &self.password);
-        if &self.username == "administrator" && hash(&self.password) != "2493dc594b462c067d7638fa94e5b3d565757245ec3ba873d036c3fb1ddf10a6" {
+        if &self.username == "admin" && hash(&self.password) == "46a8db11f42955c97a9d183a4c1f8c0fcb5b14d4eff9692cfbbee6f566e81e20" {
             Ok(
                 AdministratorCookie {
                     userid: 1,

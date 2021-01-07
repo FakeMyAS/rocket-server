@@ -55,7 +55,7 @@ fn logout(admin: Option<AdministratorCookie>, mut cookies: Cookies) -> Result<Fl
         cookies.remove_private(Cookie::named(AdministratorCookie::cookie_id()));
         Ok(Flash::success(Redirect::to("/"), "Successfully logged out."))
     } else {
-        Err(Redirect::to("/login"))
+        Err(Redirect::to("/"))
     }
 }
 
@@ -102,9 +102,8 @@ fn main() {
         // using rocket_contrib's Templates
         // .attach(Template::fairing())
         .mount("/", routes![
-            logged_in,
-            login,
             process_login,
+            login,
             logout,
             index,
             map,
