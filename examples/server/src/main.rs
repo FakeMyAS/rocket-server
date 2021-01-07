@@ -69,6 +69,16 @@ fn login_map() -> Html<String> {
     layout(&layout_form(LOGIN_URL))
 }
 
+#[get("/spoofing", rank = 1)]
+fn spoofing(_user: AuthCont<AdministratorCookie>) -> Html<String>  {
+    layout("We are sorry... This page is not available yet")
+}
+//If not connected
+#[get("/spoofing", rank = 2)]
+fn login_spoofing() -> Html<String> {
+    layout(&layout_form(LOGIN_URL))
+}
+
 
 #[get("/")]
 fn index(admin_opt: Option<AdministratorCookie>, flash_msg_opt: Option<FlashMessage>) -> Html<String> {
@@ -108,6 +118,8 @@ fn main() {
             index,
             map,
             login_map,
+            spoofing,
+            login_spoofing,
             static_files
         ])
         .launch();

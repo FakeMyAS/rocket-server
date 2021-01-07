@@ -43,13 +43,13 @@ a {
     text-decoration: none;
 }
 a:visited {
-    color: #10b6cb;
+    color: white;
 }
 a:hover {
-    color: #bd67fd;
+    color: #5dc4ff;
 }
 a:active {
-    color: #bd67fd;
+    color: #5dc4ff;
 }
 
 .v-nav-bar {
