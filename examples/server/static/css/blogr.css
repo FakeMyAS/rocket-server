@@ -404,7 +404,6 @@ mark, .v-term {
     /*font-family: Geneva, ‘Lucida Sans’, ‘Lucida Grande’, ‘Lucida Sans Unicode’, Verdana, sans-serif;*/
     font-size: 1.15em;
 }
-}
 
 @media all and (max-height: 432px) and (orientation:landscape) {
     .blog-logo {
