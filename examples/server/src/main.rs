@@ -29,6 +29,7 @@ use layout::*;
 #[allow(dead_code)]
 const URL: &'static str = "http://localhost:8000";
 const LOGIN_URL: &'static str = "http://localhost:8000/login";
+const MAP_URL: &'static str = "http://localhost:8000/map";
 
 //Display the message when logged in, or display the form to log in
 #[get("/login", rank = 1)]
@@ -61,7 +62,7 @@ fn logout(admin: Option<AdministratorCookie>, mut cookies: Cookies) -> Result<Fl
 
 #[get("/map", rank = 1)]
 fn map(_user: AuthCont<AdministratorCookie>) -> Html<String>  {
-    layout("OK map")
+    layout(&layout_map())
 }
 //If not connected
 #[get("/map", rank = 2)]

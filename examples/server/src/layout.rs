@@ -42,9 +42,9 @@ pub const LAYOUT_HEADER: &'static str = r##"
         <script src="sha256.js"></script>
         <script src="login.js"></script>
         
-        <style>
-        
-        </style>
+        <!-- Leaflet -->
+        <link rel="stylesheet" href="./leaflet/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+
     </head>
     <body>
         <div id="mainWrapper" class="main-wrapper">
@@ -142,6 +142,19 @@ pub fn layout_form(url: &str) -> String {
                         </form>
 "##, url=url)
 }
+
+
+pub fn layout_map() -> String {
+    format!(r##"
+            <div id="map">
+                <!-- Ici s'affichera la carte -->
+            </div>
+            <!-- Fichiers Javascript -->
+            <script src="./leaflet/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+            <script src="/leaflet/map.js">
+    "##)
+}
+
 
 pub fn layout_retry_form(url: &str, username: &str) -> String {
     format!(r##"
