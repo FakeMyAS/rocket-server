@@ -26,7 +26,7 @@ pub const LAYOUT_HEADER: &'static str = r##"
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Rocket Authorization Login Example</title>
+        <title>FakeMyAs Server</title>
         
         <!-- Required meta tags -->
         <meta charset="utf-8">

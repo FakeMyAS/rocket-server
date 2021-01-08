@@ -266,7 +266,7 @@ input:focus, textarea:focus {
 
 .v-form-message {
     display: none;
-    color: #f0ad4e;
+    color: #5bc0de;
     margin-top: .25rem;
     font-size: .875rem;
 }
@@ -335,8 +335,6 @@ mark, .v-term {
     /*flex-basis: 30ch;*/
 }
 #v-body {
-    border: 1px solid #212529
-    /*border: 1px dashed #dd0000;*/
     /*margin: 0px 5%;*/
     flex: 9 1 100%;
     order: 2;
