@@ -72,7 +72,9 @@ fn login_map() -> Html<String> {
 
 #[get("/spoofing", rank = 1)]
 fn spoofing(_user: AuthCont<AdministratorCookie>) -> Html<String>  {
-    layout("We are sorry... This page is not available yet")
+    let mut contents = String::with_capacity(300);
+    contents.push_str(r#"<div id="v-body"><div class="v-content">We are sorry... This page is not available yet</div>"#);
+    layout(&contents)
 }
 //If not connected
 #[get("/spoofing", rank = 2)]
