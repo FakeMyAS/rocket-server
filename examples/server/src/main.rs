@@ -93,8 +93,8 @@ fn index(admin_opt: Option<AdministratorCookie>, flash_msg_opt: Option<FlashMess
         }
     }
     if let Some(admin) = admin_opt {
-        contents.push_str(r#"<a href="/map">Get my position</a><br></br>"#); //redirect to the home page with a spoofing and get my position bouton
-        contents.push_str(r#"<a href="/spoofing">Spoofing</a>"#);
+        contents.push_str(r#"<div id="v-body"><div class="v-content"><a href="/map">Get my position</a><br></br>"#); //redirect to the home page with a spoofing and get my position bouton
+        contents.push_str(r#"<a href="/spoofing">Spoofing</a></div>"#);
         layout(&contents)
     } else {
         layout(&layout_form(LOGIN_URL)) //put directly the form

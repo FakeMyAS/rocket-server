@@ -69,27 +69,11 @@ pub const LAYOUT_HEADER: &'static str = r##"
                     
                 </div>
             </nav>
-                <div id="v-body">
-                    <div class="v-content">
                         
 "##;
 
-// A possible function to pad the left side of each line of output to match the layout template
-// pub fn pad_output(input: String) -> String {
-//     input.lines().map(|mut o|
-//         // if the line already begins with at least 6 tabs or 24 spaces do nothing
-//         if (o.len() > 6 && o.get(0..6) == Some("\t\t\t\t\t\t")) || (o.len() > 24 && o.get(0..24) == Some("                        ")) {
-//             o
-//         } else {
-//             // otherwise prepend the correct amount of spacing
-//             o.insert_str(0, "                        ")
-//         }
-        
-//         )
-// }
-
 pub const LAYOUT_FOOTER: &'static str = r##"
-                    </div>
+                <div id="v-body">
                     <footer id="v-footer">
                         <div class="v-copyright"> GPS Spoofing as a Service | GPSSaaS</div>
                         <!-- <div class="v-generation-time">Generated in  seconds</div> -->
@@ -115,6 +99,8 @@ pub const LAYOUT_FOOTER: &'static str = r##"
 
 pub fn layout_form(url: &str) -> String {
     format!(r##"
+                <div id="v-body">
+                    <div class="v-content">
                         <form id="needs-validation" action="{url}" name="login_form" method="post" novalidate>
                             <div class="form-group" id="userGroup">
                                 <label for="usernameField">User Name</label>
@@ -140,24 +126,31 @@ pub fn layout_form(url: &str) -> String {
                                 <button type="submit" class="btn btn-primary" id="submit-button-id">Login</button>
                             </div>
                         </form>
+                        </div>
 "##, url=url)
 }
 
 
 pub fn layout_map() -> String {
     format!(r##"
+    <div id="v-body-map">
+        <div class="v-content-map">
             <div id="map">
                 <!-- Ici s'affichera la carte -->
             </div>
             <!-- Fichiers Javascript -->
             <script src="./leaflet/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-            <script src="/leaflet/map.js">
+            <script src="/leaflet/map.js"></script>
+        </div>
+    </div>
     "##)
 }
 
 
 pub fn layout_retry_form(url: &str, username: &str) -> String {
     format!(r##"
+    <div id="v-body">
+            <div class="v-content">
                         <form id="needs-validation" action="{url}" name="login_form" method="post" novalidate>
                             <div class="form-group" id="userGroup">
                                 <label for="usernameField">Email Address</label>
@@ -183,12 +176,15 @@ pub fn layout_retry_form(url: &str, username: &str) -> String {
                                 <button type="submit" class="btn btn-primary" id="submit-button-id">Login</button>
                             </div>
                         </form>
+                    </div>
 "##, url=url, username=sanitize(username))
 }
 
 #[allow(dead_code)]
 pub fn alert_danger(msg: &str) -> String {
     format!(r##"
+    <div id="v-body">
+    <div class="v-content">
                         <div class="v-centered-msg alert alert-danger" role="alert">
                             {why}
                         </div>
@@ -197,6 +193,8 @@ pub fn alert_danger(msg: &str) -> String {
 #[allow(dead_code)]
 pub fn alert_success(msg: &str) -> String {
     format!(r##"
+    <div id="v-body">
+                    <div class="v-content">
                         <div class="v-centered-msg alert alert-success" role="alert">
                             {why}
                         </div>
@@ -205,6 +203,8 @@ pub fn alert_success(msg: &str) -> String {
 #[allow(dead_code)]
 pub fn alert_info(msg: &str) -> String {
     format!(r##"
+    <div id="v-body">
+                    <div class="v-content">
                         <div class="v-centered-msg alert alert-info" role="alert">
                             {why}
                         </div>
@@ -213,6 +213,8 @@ pub fn alert_info(msg: &str) -> String {
 #[allow(dead_code)]
 pub fn alert_warning(msg: &str) -> String {
     format!(r##"
+    <div id="v-body">
+                    <div class="v-content">
                         <div class="v-centered-msg alert alert-warning" role="alert">
                             {why}
                         </div>
@@ -221,6 +223,8 @@ pub fn alert_warning(msg: &str) -> String {
 #[allow(dead_code)]
 pub fn alert_primary(msg: &str) -> String {
     format!(r##"
+    <div id="v-body">
+                    <div class="v-content">
                         <div class="v-centered-msg alert alert-primary" role="alert">
                             {why}
                         </div>
