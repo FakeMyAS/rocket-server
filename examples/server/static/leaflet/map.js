@@ -9,7 +9,7 @@ var macarte = null;
 // Fonction d'initialisation de la carte
 function initMap() {
     // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
-    macarte = L.map('map').setView([lat, lon], 5);
+    macarte = L.map('map').setView([lat, lon], 8);
     // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer.
     L.tileLayer('http://localhost:8080/tile/{z}/{x}/{y}.png', {
         // Il est toujours bien de laisser le lien vers la source des données
@@ -20,12 +20,14 @@ function initMap() {
     var marker = L.marker([lat, lon]).addTo(macarte);
     // Fonction permettant l'actualisation de la position du pin
 	function renewMarkers(){
-		var lt = Math.floor(Math.random()*5);
-		var ln = Math.floor(Math.random()*5);
-		var newLatLng = new L.LatLng(latArr[lt], lngArr[ln]);
-    	marker.setLatLng(newLatLng);
-	}
-	setInterval(renewMarkers, 2000);
+		var nb = Math.floor(Math.random()*5);
+        var newLatLng = new L.LatLng(latArr[nb], lngArr[nb]);
+    	marker.setLatLng(newLatLng).bindPopup('Lat : '+latArr[nb]+'<br />'+'Long : '+lngArr[nb],  {
+            closeButton: false,
+            closeOnClick: false
+        }).openPopup();
+    }
+    setInterval(renewMarkers, 2000);
 }
 window.onload = function(){
 // Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
