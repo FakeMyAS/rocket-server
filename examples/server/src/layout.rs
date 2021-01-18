@@ -147,7 +147,7 @@ pub fn layout_map() -> String {
 
             <!-- Custom CSS -->
             <link id="css-stylesheet" type="text/css" href="css/mapbis.css" rel="stylesheet" />
-            <link rel="stylesheet" href="./leaflet/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="crossorigin=""/>
+            <link rel="stylesheet" href="./leaflet/leaflet.css"/>
 
             <!-- JavaScript -->
                 <script src="sha256.js"></script>
@@ -159,7 +159,7 @@ pub fn layout_map() -> String {
                     <!-- Ici s'affichera la carte -->
                 </div>
                 <!-- Fichiers Javascript -->
-                    <script src="./leaflet/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+                    <script src="./leaflet/leaflet.js"></script>
                     <script src="/leaflet/map.js"></script>
                 </body>
     </html>
