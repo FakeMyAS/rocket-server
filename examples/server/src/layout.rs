@@ -33,7 +33,7 @@ pub const LAYOUT_HEADER: &'static str = r##"
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="./bootstrap-4.5.3/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" />
+        <link rel="stylesheet" href="./bootstrap-4.5.3/css/bootstrap.min.css"/>
         
         <!-- Custom CSS -->
         <link id="css-stylesheet" type="text/css" href="css/blogr.css" rel="stylesheet" />
@@ -43,7 +43,7 @@ pub const LAYOUT_HEADER: &'static str = r##"
         <script src="login.js"></script>
         
         <!-- Leaflet -->
-        <link rel="stylesheet" href="./leaflet/leaflet.css" integrity="sha384-KscXTJKVrAk/aUsa93+zcCEzK3l4R8cpPw+Qq41tJ343mR9P4aw7brBteo4qK0E4%"/>
+        <link rel="stylesheet" href="./leaflet/leaflet.css"/>
 
     </head>
     <body>
@@ -85,8 +85,8 @@ pub const LAYOUT_FOOTER: &'static str = r##"
             
         <!-- </div> -->
         <!-- jQuery first, then Bootstrap JS -->
-        <script src="./jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"></script>
-        <script src="./bootstrap-4.5.3/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"></script>
+        <script src="./jquery-3.5.1.min.js"></script>
+        <script src="./bootstrap-4.5.3/js/bootstrap.min.js"></script>
         
         <!-- Custom JavaScript -->
         <script>
@@ -138,7 +138,7 @@ pub fn layout_map() -> String {
                 <!-- Ici s'affichera la carte -->
             </div>
             <!-- Fichiers Javascript -->
-            <script src="./leaflet/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="></script>
+            <script src="./leaflet/leaflet.js"></script>
             <script src="/leaflet/map.js"></script>
         </div>
     </div>
