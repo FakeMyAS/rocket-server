@@ -33,7 +33,7 @@ pub const LAYOUT_HEADER: &'static str = r##"
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <link rel="stylesheet" href="./bootstrap-4.5.3/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" />
         
         <!-- Custom CSS -->
         <link id="css-stylesheet" type="text/css" href="css/blogr.css" rel="stylesheet" />
@@ -43,7 +43,7 @@ pub const LAYOUT_HEADER: &'static str = r##"
         <script src="login.js"></script>
         
         <!-- Leaflet -->
-        <link rel="stylesheet" href="./leaflet/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+        <link rel="stylesheet" href="./leaflet/leaflet.css" integrity="sha384-KscXTJKVrAk/aUsa93+zcCEzK3l4R8cpPw+Qq41tJ343mR9P4aw7brBteo4qK0E4%"/>
 
     </head>
     <body>
@@ -84,10 +84,9 @@ pub const LAYOUT_FOOTER: &'static str = r##"
             
             
         <!-- </div> -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+        <!-- jQuery first, then Bootstrap JS -->
+        <script src="./jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"></script>
+        <script src="./bootstrap-4.5.3/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"></script>
         
         <!-- Custom JavaScript -->
         <script>
@@ -139,7 +138,7 @@ pub fn layout_map() -> String {
                 <!-- Ici s'affichera la carte -->
             </div>
             <!-- Fichiers Javascript -->
-            <script src="./leaflet/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+            <script src="./leaflet/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="></script>
             <script src="/leaflet/map.js"></script>
         </div>
     </div>
