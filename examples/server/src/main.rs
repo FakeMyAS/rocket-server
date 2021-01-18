@@ -62,7 +62,7 @@ fn logout(admin: Option<AdministratorCookie>, mut cookies: Cookies) -> Result<Fl
 
 #[get("/map", rank = 1)]
 fn map(_user: AuthCont<AdministratorCookie>) -> Html<String>  {
-    layout(&layout_map())
+    layoutbis(&layout_map())
 }
 //If not connected
 #[get("/map", rank = 2)]

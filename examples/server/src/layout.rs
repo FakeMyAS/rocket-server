@@ -21,6 +21,11 @@ pub fn layout(contents: &str) -> Html<String> {
     Html(output)
 }
 
+pub fn layoutbis(contents: &str) -> Html<String> {
+    let mut output = String::with_capacity(contents.len() + 30);
+    output.push_str(contents);
+    Html(output)
+}
 
 pub const LAYOUT_HEADER: &'static str = r##"
 <!doctype html>
@@ -132,16 +137,32 @@ pub fn layout_form(url: &str) -> String {
 
 pub fn layout_map() -> String {
     format!(r##"
-    <div id="v-body-map">
-        <div class="v-content-map">
-            <div id="map">
-                <!-- Ici s'affichera la carte -->
-            </div>
-            <!-- Fichiers Javascript -->
-            <script src="./leaflet/leaflet.js"></script>
-            <script src="/leaflet/map.js"></script>
-        </div>
-    </div>
+    <!DOCTYPE html>
+    <html>
+        <head>
+        <title>FakeMyAs Server</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <!-- Nous chargeons les fichiers CDN de Leaflet. Le CSS AVANT le JS -->
+
+            <!-- Custom CSS -->
+            <link id="css-stylesheet" type="text/css" href="css/mapbis.css" rel="stylesheet" />
+            <link rel="stylesheet" href="./leaflet/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="crossorigin=""/>
+
+            <!-- JavaScript -->
+                <script src="sha256.js"></script>
+                <script src="login.js"></script>
+
+                </head>
+                <body>
+                    <div id="map">
+                    <!-- Ici s'affichera la carte -->
+                </div>
+                <!-- Fichiers Javascript -->
+                    <script src="./leaflet/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+                    <script src="/leaflet/map.js"></script>
+                </body>
+    </html>
     "##)
 }
 
