@@ -150,6 +150,7 @@ pub fn layout_map() -> String {
             <link rel="stylesheet" href="./leaflet/leaflet.css"/>
 
             <!-- JavaScript -->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
                 <script src="sha256.js"></script>
                 <script src="login.js"></script>
 

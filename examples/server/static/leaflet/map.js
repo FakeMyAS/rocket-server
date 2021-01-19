@@ -1,7 +1,3 @@
-
-// Tableau de coordonées GPS de différentes villes en région PACA
-var latArr = [43.1257311, 43.296482, 43.2833, 43.4333, 43.7031];
-var lngArr = [5.9304919, 5.36978, 5.5667, 6.7333, 7.2661];
 // On initialise la latitude et la longitude de Toulon (centre de la carte)
 var lat = 43.1257311;
 var lon = 5.9304919;
@@ -19,10 +15,10 @@ function initMap() {
     // Nous ajoutons un marqueur
     var marker = L.marker([lat, lon]).addTo(macarte);
     // Fonction permettant l'actualisation de la position du pin
-	function renewMarkers(){
-		var nb = Math.floor(Math.random()*5);
-        var newLatLng = new L.LatLng(latArr[nb], lngArr[nb]);
-    	marker.setLatLng(newLatLng).bindPopup('Lat : '+latArr[nb]+'<br />'+'Long : '+lngArr[nb],  {
+    
+    function renewMarkers(){
+        var newLatLng = new L.LatLng(latitude, longitude);
+    	marker.setLatLng(newLatLng).bindPopup('Lat : '+latitude+'<br />'+'Long : '+longitude,  {
             closeButton: false,
             closeOnClick: false
         }).openPopup();
@@ -31,5 +27,31 @@ function initMap() {
 }
 window.onload = function(){
 // Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
-initMap(); 
+initMap();
+setValue($);
 };
+
+var latitude = 0;
+var longitude = 0;
+
+function setValue($) {
+  //
+    // AJAX in the data file
+    $.ajax({
+      type: "GET",
+      url: "location/gps.gpx",
+      dataType: "xml",
+    }).done(function (data) {
+      $xml = $(data);
+      latitude = $xml.find("trkpt").last().attr("lat");
+      longitude = $xml.find("trkpt").last().attr("lon");
+      console.log(latitude +" "+ longitude);
+      setTimeout(setValue, 4500, $);    
+    }
+    );
+  }
+  //);
+//}
+jQuery(document).ready(function ($) {
+    setTimeout(setValue, 4500, $);    
+})
