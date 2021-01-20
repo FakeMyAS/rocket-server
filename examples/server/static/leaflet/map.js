@@ -7,7 +7,7 @@ function initMap() {
     // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
     macarte = L.map('map').setView([lat, lon], 8);
     // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer.
-    L.tileLayer('http://192.168.1.4:8080/tile/{z}/{x}/{y}.png', {
+    L.tileLayer('http://192.168.4.1:8080/tile/{z}/{x}/{y}.png', {
         // Il est toujours bien de laisser le lien vers la source des données
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
         minZoom: 1
@@ -40,7 +40,7 @@ function setValue($) {
       latitude = $xml.find("trkpt").last().attr("lat");
       longitude = $xml.find("trkpt").last().attr("lon");
       console.log(latitude +" "+ longitude);
-      setTimeout(setValue, 4500, $);    
+      setTimeout(setValue, 8000, $);    
     }
     );
   }

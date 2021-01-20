@@ -150,19 +150,19 @@ pub fn layout_map() -> String {
             <link rel="stylesheet" href="./leaflet/leaflet.css"/>
 
             <!-- JavaScript -->
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-                <script src="sha256.js"></script>
-                <script src="login.js"></script>
+            <script src="./jquery-3.5.1.min.js"></script>
+            <script src="sha256.js"></script>
+            <script src="login.js"></script>
 
-                </head>
-                <body>
-                    <div id="map">
-                    <!-- Ici s'affichera la carte -->
-                </div>
-                <!-- Fichiers Javascript -->
-                    <script src="./leaflet/leaflet.js"></script>
-                    <script src="/leaflet/map.js"></script>
-                </body>
+        </head>
+        <body>
+            <div id="map">
+            <!-- Ici s'affichera la carte -->
+        </div>
+        <!-- Fichiers Javascript -->
+            <script src="./leaflet/leaflet.js"></script>
+            <script src="/leaflet/map.js"></script>
+        </body>
     </html>
     "##)
 }
