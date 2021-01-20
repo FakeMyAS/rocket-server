@@ -37,4 +37,4 @@ COPY . /home/rocket/
 WORKDIR /home/rocket/examples/server
 RUN rustup default nightly
 RUN cargo build
-CMD ["cargo", "run"]
+CMD ./copy.sh
