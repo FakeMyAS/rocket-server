@@ -1,21 +1,25 @@
-% Rocket-auth-login Basic Example
-
+% Rocket-Server application: Project FakeMyAs 
 # Purpose
-The purpose of this example is to show a more simplistic example of how to use the rocket-auth-login module and to demonstrate how to handle authentication when a database is not needed (like when using a hard coded list of usernames and passwords or checking against usernames/passwords loaded from a file).
+The purpose of this project is to show an example of how to we can use a HackRF One card and a Raspberry Pi to generate a webpage to authentificate a user and allow him to check his position (1st part) and to spoof another GPS position (2nd part).
 
 # Authentication
-Authentication in this example simply checks to see that the user entered "administrator" as the username and that a password is present, it does not check what the password is.  There is no database connected to this example.
+Authentication in this project checks to see that the user entered "admin" as the username and that the password entered, once hashed and salted, have the same signature than what we set beforehand.
 
 # Login Redirection
-Upon successful authentication of the credentials in the login form data structure (`AdministratorForm` in this example) the `flash_redirect` function is called to redirect the user to the page specified when authentication is successful.  When authentication fails the function will add a [FlashMessage](https://api.rocket.rs/rocket/response/struct.Flash.html) cookie (a cookie that is deleted once it is read, enabling messages to be passed but when refreshed the messages are not shown.  This works well for things like telling the user they have been logged out or telling why authentication failed) redirect the user to the page specified when authentication fails
+Upon successful authentication of the credentials in the login form data structure (`AdministratorForm` in this example) the user's browser will receive a cookies that will allows him to navigate toward otherwise restricted area (use of "rank=[value]" on the restricted page's route).  When authentication fails the page is refreshed and the user. 
 
-# Using The Example
-The example is setup with three main routes:
+# Using The Project
+The example is setup with different routes:
 
-* **/** - The index page, can be accessed at [http://localhost:8000/](http://localhost:8000/)
-* **/login** - either displays a login form (or a retry login form) or once logged in displays user information.  Can be accessed at [http://localhost:8000/login](http://localhost:8000/login)
-* **/logout** - if the user is logged in it removes the private cookie and returns to the login page.  It can be accessed at [http://localhost:8000/logout](http://localhost:8000/logout)
+* **/** - Redirect to the login page [http://192.168.4.1:8000/login](http://192.168.4.1:8000/login). Then either display to a login form (or a retry login form) or once logged in displays a choice between "position display" and "spoofing". Can be accessed at [http://192.168.4.1:8000](http://192.168.4.1:8000)
+* **/logout** - if the user is logged in it removes the private cookie and returns to the login page.  It can be accessed at [http://192.168.4.1:8000/logout](http://192.168.4.1:8000/logout)
+* **/map** - If the user has corresponding authorization access : Display the map with our marker for the position at [http://192.168.4.1:8000/map](http://192.168.4.1:8000/map) otherwise, redirect to the login page to give the user the possibility to authenticate himself.
+
+* **/spoofing** - Similar to the **/map page : If the user has corresponding authorization access : Display the menu to choose which position should the device spoof [http://192.168.4.1:8000/spoofing](http://192.168.4.1:8000/spoofing) otherwise, redirect to the login page to give the user the possibility to authenticate himself.
+
+`192.168.4.1` is the ip address of our Raspberry Pi which is configured as an hotspot. Consequently, to have access to this server, we have to be connected to its network called `FakeMyAs` with the good password.
 
 
-**Copyright Note**: The Rocket-auth-login crate and Rust code examples are licensed under the Apache 2.0 license.  However the layout/design in the examples was created by me.  You can use it however if you put in at least an HTML comment inside the HTML output saying Design &copy; 2017 Andrew Prindle.
-The rest of the application you may use without any kind of credit displayed to users but must follow the terms of the Apache 2.0 license.
+
+**Copyright Note**: 
+The Rocket-auth-login crate and Rust code examples are licensed under the Apache 2.0 license.
