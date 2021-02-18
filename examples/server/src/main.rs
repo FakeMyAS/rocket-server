@@ -27,9 +27,9 @@ use administrator::*;
 use layout::*;
 
 #[allow(dead_code)]
-const URL: &'static str = "http://192.168.4.1:8000";
-const LOGIN_URL: &'static str = "http://192.168.4.1:8000/login";
-const MAP_URL: &'static str = "http://192.168.4.1:8000/map";
+const URL: &'static str = "http://localhost:8000";
+const LOGIN_URL: &'static str = "http://localhost:8000/login";
+const MAP_URL: &'static str = "http://localhost:8000/map";
 
 //Display the message when logged in, or display the form to log in
 #[get("/login", rank = 1)]
@@ -73,8 +73,7 @@ fn login_map() -> Html<String> {
 #[get("/spoofing", rank = 1)]
 fn spoofing(_user: AuthCont<AdministratorCookie>) -> Html<String>  {
     let mut contents = String::with_capacity(300);
-    contents.push_str(r#"<div id="v-body"><div class="v-content">We are sorry... This page is not available yet</div>"#);
-    layout(&contents)
+    layout(&layout_spoof())
 }
 //If not connected
 #[get("/spoofing", rank = 2)]

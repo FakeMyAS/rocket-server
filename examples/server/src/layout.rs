@@ -167,6 +167,41 @@ pub fn layout_map() -> String {
     "##)
 }
 
+pub fn layout_spoof() -> String {
+    format!(r##"
+    <!DOCTYPE html>
+    <html>
+        <head>
+        <title>FakeMyAs Server</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <!-- Nous chargeons les fichiers CDN de Leaflet. Le CSS AVANT le JS -->
+
+            <!-- Custom CSS -->
+            <link id="css-stylesheet" type="text/css" href="css/mapbis.css" rel="stylesheet" />
+            <link rel="stylesheet" href="./leaflet/leaflet.css"/>
+
+            <!-- JavaScript -->
+            <script src="./jquery-3.5.1.min.js"></script>
+            <script src="sha256.js"></script>
+            <script src="login.js"></script>
+
+        </head>
+        <body>
+        <div>
+        <button type="button" onclick="sendData()">Cliquez ici !</button>
+        </div>
+            <div id="map">
+            <!-- Ici s'affichera la carte -->
+        </div>
+        
+        <!-- Fichiers Javascript -->
+            <script src="./leaflet/leaflet.js"></script>
+            <script src="/leaflet/mapSpoof.js"></script>
+        </body>
+    </html>
+    "##)
+}
 
 pub fn layout_retry_form(url: &str, username: &str) -> String {
     format!(r##"
