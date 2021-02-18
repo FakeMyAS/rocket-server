@@ -1,63 +1,55 @@
-// On initialise la latitude et la longitude de Toulon (centre de la carte)
+// On initialise la latitude et la longitude de Toulon (centre de la carte), l'altitude et un temps par défaut
 var lat = 43.1257311;
 var lon = 5.9304919;
+var alt = 100;
+var time = 0;
 var macarte = null;
 // Fonction d'initialisation de la carte
 function initMap() {
     // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
     macarte = L.map('map').setView([lat, lon], 8);
     // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer.
-    L.tileLayer('http://localhost:8080/tile/{z}/{x}/{y}.png', {
+    L.tileLayer('http://192.168.4.1:8080/tile/{z}/{x}/{y}.png', {
         // Il est toujours bien de laisser le lien vers la source des données
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
         minZoom: 1
     }).addTo(macarte);
     // Nous ajoutons un marqueur
     var marker = L.marker([lat, lon]).addTo(macarte);
-    // Fonction permettant l'actualisation de la position du pin
-    
-    function renewMarkers(){
-        var newLatLng = new L.LatLng(latitude, longitude);
-    	marker.setLatLng(newLatLng).bindPopup('Lat : '+latitude+'<br />'+'Long : '+longitude,  {
+    var initLatLng = new L.LatLng(lat, lon);
+		marker.setLatLng(initLatLng).bindPopup('Lat : '+lat+'<br />'+'Long : '+lon,  {
             closeButton: false,
             closeOnClick: false
         }).openPopup();
-    }
-    setInterval(renewMarkers, 2000);
+    //Ajouter un pin au click
+	macarte.on('click', addMarker);
+ 
+	function addMarker(e){
+	  // Add marker to map at click location; add popup window
+	  //var newMarker = new L.marker(e.latlng).addTo(macarte);
+		var newLatLng = new L.LatLng(e.latlng.lat, e.latlng.lng);
+		marker.setLatLng(newLatLng).bindPopup('Lat : '+e.latlng.lat+'<br />'+'Long : '+e.latlng.lng,  {
+            closeButton: false,
+            closeOnClick: false
+
+        }).openPopup();
+        //On écrit la longitude et la latitude dans nos variables globales
+        lat = e.latlng.lat;
+        lon = e.latlng.lng;
+        //On appelle la fonction pour envoyer la requête POST
+        sendData();
+	}
 }
-var latitude = 0;
-var longitude = 0;
-
-function setValue($) {
-  //
-    // AJAX in the data file
-    $.ajax({
-      type: "GET",
-      url: "location/gps.gpx",
-      dataType: "xml",
-    }).done(function (data) {
-      $xml = $(data);
-      latitude = $xml.find("trkpt").last().attr("lat");
-      longitude = $xml.find("trkpt").last().attr("lon");
-      console.log(latitude +" "+ longitude);
-      setTimeout(setValue, 8000, $);    
-    }
-    );
-  }
-  //);
-
-
-jQuery(document).ready(function ($){
-// Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
-initMap();
-setValue($);
-});
+window.onload = function () {
+	  // Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
+	  initMap();
+	};
 
 function sendData(){
     var XHR = new XMLHttpRequest();
 
     // Configuration de la requête
-    XHR.open('POST', 'http://127.0.0.1:12913/?lat=28.456789,long=4.23456789,alt=100,time=34');
+    XHR.open('POST', 'http://192.168.4.1:12913/?lat='+lat.toString()+',long='+lon.toString()+',alt='+alt.toString()+',time='+time.toString());
 
     // Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
     XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
