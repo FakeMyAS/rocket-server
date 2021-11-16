@@ -1,6 +1,53 @@
 html, body, #map {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+ width: 100%; 
+ height: 100%; 
+ margin: 0; 
+ padding: 0; 
+ position: relative;
+}
+
+.center-screen { 
+ display: flex; 
+ flex-direction: column; 
+ justify-content: center; 
+ align-items: center; 
+ text-align: center; 
+ min-height: 100vh;
+}
+
+#speed {
+ background-color: #504b4ba1; 
+ border-radius: 50%; 
+ width: 25vmax; 
+ height: 25vmax; 
+ position: absolute; 
+ z-index: 500; 
+ display: flex; /* contexte sur le parent */ 
+ flex-direction: column; /* direction d'affichage verticale */ 
+ justify-content: center; /* alignement vertical */ 
+ text-align: center;
+ font-size:15vmax; visibility: hidden;
+}
+
+#shutdown {
+    background-color: white;
+    border-radius: 50%;
+    width: 10vmax;
+    height: 10vmax;
+    position: relative;
+    z-index: 499;
+    text-align: center;
+	font-size:15vmax;
+	float: right;
+	margin-right: -4vmax;
+	margin-top: -4vmax;
+}
+
+#shutdown-logo {
+	background-image: url('../../../leaflet/images/power-off-solid.svg');
+	left: 1.5vmax;
+	bottom: 1.5vmax;
+	width: 4vmax;
+	height: 4vmax;
+	position: absolute;
 }

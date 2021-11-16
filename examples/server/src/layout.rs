@@ -188,12 +188,13 @@ pub fn layout_spoof() -> String {
 
         </head>
         <body>
-        <div>
-        <button type="button" onclick="sendData()">Cliquez ici !</button>
+        <div id="map">
+        <div id="shutdown"><div id="shutdown-logo"></div></div>
+        <div class="center-screen">
+          <div id="speed"></div>
         </div>
-            <div id="map">
-            <!-- Ici s'affichera la carte -->
-        </div>
+        <!-- Ici s'affichera la carte --> 
+      </div>
         
         <!-- Fichiers Javascript -->
             <script src="./leaflet/leaflet.js"></script>
