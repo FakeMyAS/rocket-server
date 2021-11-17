@@ -12,8 +12,27 @@ var speed_indice = 2;
 var slow_down = 0;
 var speed_up = 0;
 
+
+function windowSizeChanged() {
+	var largeurFenetre = window.innerWidth;
+	var hauteurFenetre = window.innerHeight;
+	var hauteur=document.getElementById("navbar").offsetHeight; 
+	var gauche=document.getElementById("sidebar").offsetWidth;
+	var marginGauche=document.getElementById("sidebar").offsetLeft;
+	var widthMap=largeurFenetre - gauche;
+	var heightMap=hauteurFenetre - hauteur;
+	navbar.style.cssText = "position:fixed;width: 100%;";
+	//sidebar.style.cssText = "z-index: 1019; margin-top: "+hauteur+"px; height: "+heightMap+"px";
+	if(marginGauche >= 0)
+	map.style.cssText = "position:fixed;margin-left:"+gauche+"px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+widthMap+"px;height: "+heightMap+"px";
+	else
+	map.style.cssText = "position:fixed;margin-left:0px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+largeurFenetre+"px;height: "+heightMap+"px";
+}
+
+window.addEventListener('resize', windowSizeChanged);
+
 // Gestion du click sur le bouton SHUTDOWN
-var shutdown = document.getElementById('shutdown');
+/*var shutdown = document.getElementById('shutdown');
 
 shutdown.style.cursor = 'pointer';
 shutdown.onclick = function() {
@@ -21,14 +40,14 @@ shutdown.onclick = function() {
     console.log('Click on shutdown');
 	setTimeout('clickable = 1;', 100);
 	sendStop();
-};
+};*/
 
 // Fonction d'initialisation de la carte
 function initMap() {
     // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
     macarte = L.map('map').setView([lat, lon], 8);
     // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer.
-    L.tileLayer('http://192.168.4.1:8080/tile/{z}/{x}/{y}.png', {
+    L.tileLayer('http://localhost:8080/tile/{z}/{x}/{y}.png', {
         // Il est toujours bien de laisser le lien vers la source des données
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
         minZoom: 1
@@ -42,10 +61,10 @@ function initMap() {
         }).openPopup();
     //Ajouter un pin au click
 	macarte.on('click', addMarker);
-	
+
 	setInterval(getGamepadMove, 100);
 	setInterval(getGamepadButtons, 50);
-	
+
 	function updateMarkerPosition(latitude, longitude){
 		var newLatLng = new L.LatLng(latitude, longitude);
 		marker.setLatLng(newLatLng).bindPopup('Lat : '+latitude+'<br />'+'Long : '+longitude,  {
@@ -54,13 +73,13 @@ function initMap() {
         }).openPopup();
 	sendData();
 	}
-	
+
 	function updateMapPosition(latitude, longitude){
 		var newLatLng = new L.LatLng(latitude, longitude);
 		macarte.panTo(newLatLng);
 		macarte.setView(newLatLng, macarte.getZoom());
 	}
- 
+
 	function addMarker(e){
 		// Move the marker at click location; add popup window
 		updateMarkerPosition(e.latlng.lat, e.latlng.lng);
@@ -70,28 +89,28 @@ function initMap() {
         sendData();
 
 	}
-	
+
 	function roundDecimal(nombre, precision){
 		if(precision == null)
 			precision = 2;
 		var tmp = Math.pow(10, precision);
 		return Math.round( nombre*tmp )/tmp;
 	}
-	
+
 	function isPressed({button: {pressed}}) {
         return !!pressed;
     }
-	
+
 	function getGamepadMove() {
 		// Coef of speed. (Ex : 2)
         //const speed = 1.8;
-		
+
         // Returns up to 4 gamepads.
         const gamepads = navigator.getGamepads();
 
         // We take the first one, for simplicity
         const gamepad = gamepads[0];
-		
+
 		var updateMarker = 0;
 		var updateMap = 0;
 
@@ -100,9 +119,9 @@ function initMap() {
             //console.log('No gamepad found.');
             return;
         }
-		
+
 		/* GESTION DU DEPLACEMENT MARKER */
-		
+
 		//Axe X pour la longitude
 		if(gamepad.axes[0] < -0.1 || gamepad.axes[0] > 0.1){
 			var newMarkerLongitude = marker.getLatLng().lng + gamepad.axes[0] / Math.pow(speed_tab[speed_indice], macarte.getZoom());
@@ -117,7 +136,7 @@ function initMap() {
 			var newMarkerLongitude = marker.getLatLng().lng;
 			lon = newMarkerLongitude;
 		}
-		
+
 		//Axe Y pour la latitude
 		if(gamepad.axes[1] < -0.1 || gamepad.axes[1] > 0.1){
 			var newMarkerLatitude = marker.getLatLng().lat + (gamepad.axes[1]*-1) / Math.pow(speed_tab[speed_indice], macarte.getZoom());
@@ -132,12 +151,12 @@ function initMap() {
 			var newMarkerLatitude = marker.getLatLng().lat;
 			lat = newMarkerLatitude;
 		}
-		
+
 		if(updateMarker == 1)
 			updateMarkerPosition(newMarkerLatitude, newMarkerLongitude);
-		
+
 		/* GESTION DU DEPLACEMENT MAP */
-		
+
 		//Axe X pour la longitude
 		if(gamepad.axes[2] < -0.1 || gamepad.axes[2] > 0.1){
 			var newMapLongitude = macarte.getCenter().lng + gamepad.axes[2] / Math.pow(1.3, macarte.getZoom());
@@ -150,7 +169,7 @@ function initMap() {
 		} else {
 			var newMapLongitude = macarte.getCenter().lng;
 		}
-		
+
 		//Axe Y pour la latitude
 		if(gamepad.axes[3] < -0.1 || gamepad.axes[3] > 0.1){
 			var newMapLatitude = macarte.getCenter().lat + (gamepad.axes[3]*-1) / Math.pow(1.3, macarte.getZoom());
@@ -163,12 +182,12 @@ function initMap() {
 		} else {
 			var newMapLatitude = macarte.getCenter().lat;
 		}
-		
+
 		if(updateMap == 1)
 			macarte.panTo(new L.LatLng(newMapLatitude, newMapLongitude));
 			//updateMapPosition(newMapLatitude, newMapLongitude);
     }
-	
+
 	function getGamepadButtons() {
         // Returns up to 4 gamepads.
         const gamepads = navigator.getGamepads();
@@ -181,12 +200,12 @@ function initMap() {
             //console.log('No gamepad found.');
             return;
         }
-		
+
 		/* GESTION DU ZOOM */
-		
+
 		// Filter out only the buttons which are pressed
         const pressedButtons = gamepad.buttons.map((button, id) => ({id, button})).filter(isPressed);
-		
+
 		for (const button of gamepad.buttons.map((button, id) => ({id, button}))) {
 			if(button.id == 4 && button.button.pressed == false && slow_down == 1){
 				speed_indice--;
@@ -243,14 +262,15 @@ function initMap() {
 window.onload = function () {
 	// Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
 	initMap();
+	windowSizeChanged();
 	};
-	
+
 function sendData(){
     var XHR = new XMLHttpRequest();
 
     // Configuration de la requête
     // XHR.open('POST', 'http://192.168.4.2:12913/?lat='+lat.toString()+',long='+lon.toString()+',alt='+alt.toString()+',time='+time.toString(), true);
-    XHR.open('POST', 'http://192.168.4.1:12913/?lat='+lat.toString()+',long='+lon.toString()+',alt='+alt.toString()+',time='+time.toString(), true);
+    XHR.open('POST', 'http://localhost:12913/?lat='+lat.toString()+',long='+lon.toString()+',alt='+alt.toString()+',time='+time.toString(), true);
 
     // Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
     XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -263,7 +283,7 @@ function sendStop(){
     var XHR = new XMLHttpRequest();
 
     // Configuration de la requête
-    XHR.open('POST', 'http://192.168.4.1:12913/?stop', true);
+    XHR.open('POST', 'http://localhost:12913/?stop', true);
 
     // Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
     XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

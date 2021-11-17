@@ -21,6 +21,15 @@ pub fn layout(contents: &str) -> Html<String> {
     Html(output)
 }
 
+pub fn layoutSpoofing(contents: &str) -> Html<String> {
+  let mut output = String::with_capacity(contents.len() + LAYOUT_HEADER.len() + LAYOUT_SIDEBAR.len() + LAYOUT_FOOTER.len() + 30);
+    output.push_str(LAYOUT_HEADER);
+    output.push_str(LAYOUT_SIDEBAR);
+    output.push_str(contents);
+    output.push_str(LAYOUT_FOOTER);
+    Html(output)
+}
+
 pub fn layoutbis(contents: &str) -> Html<String> {
     let mut output = String::with_capacity(contents.len() + 30);
     output.push_str(contents);
@@ -42,10 +51,15 @@ pub const LAYOUT_HEADER: &'static str = r##"
         
         <!-- Custom CSS -->
         <link id="css-stylesheet" type="text/css" href="css/blogr.css" rel="stylesheet" />
+        <link id="css-stylesheet" type="text/css" href="css/adminlte.css" rel="stylesheet" />
+        <link id="css-stylesheet" type="text/css" href="fonts/fontawesome-free/css/all.css" rel="stylesheet" />
         
         <!-- JavaScript -->
         <script src="sha256.js"></script>
         <script src="login.js"></script>
+        <script src="js/jquery/jquery.js"></script>
+        <script src="js/adminlte.js"></script>
+        <script src="bootstrap-4.5.3/js/bootstrap.bundle.js"></script>
         
         <!-- Leaflet -->
         <link rel="stylesheet" href="./leaflet/leaflet.css"/>
@@ -54,7 +68,7 @@ pub const LAYOUT_HEADER: &'static str = r##"
     <body>
         <div id="mainWrapper" class="main-wrapper">
             
-            <nav class="v-nav-bar sticky-top navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav class="v-nav-bar sticky-top navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -76,6 +90,69 @@ pub const LAYOUT_HEADER: &'static str = r##"
             </nav>
                         
 "##;
+
+pub const LAYOUT_SIDEBAR: &'static str = r##"
+<!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4" id="sidebar" style="z-index: 1019; margin-top: 55px;height: -webkit-fill-available;">
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item">
+            <a href="pages/widgets.html" class="nav-link active">
+              <i class="nav-icon fas fa-map-marked-alt"></i>
+              <p>
+                Real Time
+              </p>
+            </a>
+          </li>
+          <li class="nav-header">FOR BOAT</li>
+          <li class="nav-item">
+            <a href="pages/calendar.html" class="nav-link">
+              <i class="nav-icon far fa-route"></i>
+              <p>
+                Trajectory Smoothing
+                <!-- <span class="badge badge-info right">2</span> -->
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="pages/gallery.html" class="nav-link">
+              <i class="nav-icon far fa-location-arrow"></i>
+              <p>
+                Heading Shift
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="pages/kanban.html" class="nav-link">
+              <i class="nav-icon fas fa-history"></i>
+              <p>
+                Time Shift
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-header">FOR CAR</li>
+          <li class="nav-item">
+            <a href="iframe.html" class="nav-link">
+              <i class="nav-icon fas fa-road"></i>
+              <p>
+              Road Matching
+              <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+  "##;
 
 pub const LAYOUT_FOOTER: &'static str = r##"
                 <div id="v-body">
@@ -105,7 +182,34 @@ pub fn layout_form(url: &str) -> String {
     format!(r##"
                 <div id="v-body">
                     <div class="v-content">
-                        <form id="needs-validation" action="{url}" name="login_form" method="post" novalidate>
+
+
+                    <form id="needs-validation" action="{url}" name="login_form" method="post" novalidate>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="usernameField">Username</label>
+                    <input type="text" name="username" class="form-control" id="usernameField" placeholder="Enter username" required>
+                    <div class="invalid-feedback">
+                                        Please specify a username
+                                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="passwordField">Password</label>
+                    <input type="password" name="password" class="form-control" id="passwordField" placeholder="Enter password" required>
+                    <div class="invalid-feedback">
+                                        A password is requierd.
+                                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary" id="submit-button-id">Login</button>
+                </div>
+              </form>
+
+
+
+
+              <!-- <form id="needs-validation" action="{url}" name="login_form" method="post" novalidate>
                             <div class="form-group" id="userGroup">
                                 <label for="usernameField">User Name</label>
                                 <div class="col-md-9 mb-3">
@@ -114,7 +218,6 @@ pub fn layout_form(url: &str) -> String {
                                         Please specify a username
                                     </div>
                                 </div>
-                                <!-- <small id="idHelp" class="form-text text-muted">Your email address will not be shared with anyone else.</small> -->
                             </div>
                             <div class="form-group" id="passGroup">
                                 <label for="passwordField">Password</label>
@@ -129,7 +232,7 @@ pub fn layout_form(url: &str) -> String {
                             <div class="v-submit">
                                 <button type="submit" class="btn btn-primary" id="submit-button-id">Login</button>
                             </div>
-                        </form>
+                        </form> -->
                         </div>
 "##, url=url)
 }
@@ -188,8 +291,8 @@ pub fn layout_spoof() -> String {
 
         </head>
         <body>
-        <div id="map">
-        <div id="shutdown"><div id="shutdown-logo"></div></div>
+        <div id="map" style="position:fixed">
+        <!--<div id="shutdown"><div id="shutdown-logo"></div></div>-->
         <div class="center-screen">
           <div id="speed"></div>
         </div>
