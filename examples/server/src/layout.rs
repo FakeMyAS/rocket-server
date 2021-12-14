@@ -57,27 +57,35 @@ pub const LAYOUT_HEADER: &'static str = r##"
         <!-- JavaScript -->
         <script src="sha256.js"></script>
         <script src="login.js"></script>
-        <script src="js/jquery/jquery.js"></script>
+        <!--<script src="js/jquery/jquery.js"></script>
         <script src="js/adminlte.js"></script>
-        <script src="bootstrap-4.5.3/js/bootstrap.bundle.js"></script>
+        <script src="bootstrap-4.5.3/js/bootstrap.bundle.js"></script>-->
         
         <!-- Leaflet -->
         <link rel="stylesheet" href="./leaflet/leaflet.css"/>
 
     </head>
-    <body>
+
+    <!-- Preloader -->
+    <!--<div class="preloader flex-column justify-content-center align-items-center">
+      <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+    </div>-->
+
+    <body class="sidebar-mini">
         <div id="mainWrapper" class="main-wrapper">
             
             <nav class="v-nav-bar sticky-top navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="blog-logo navbar-brand" href="">FakeMyAs</a>
+                <a class="blog-logo navbar-brand" id="logoNavbar" href="">FakeMyAs</a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="v-nav navbar-nav mr-auto">
                         <!-- <li class="v-nav-item nav-item active"><a class="nav-link" href="">Home <span class="sr-only">(current)</span></a></li> -->
-
+                        <li class="nav-item" id="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/">Home</a></li>
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/map">Map</a></li>
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/spoofing">Spoofing</a></li>
@@ -93,7 +101,9 @@ pub const LAYOUT_HEADER: &'static str = r##"
 
 pub const LAYOUT_SIDEBAR: &'static str = r##"
 <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4" id="sidebar" style="z-index: 1019; margin-top: 55px;height: -webkit-fill-available;">
+  <aside class="main-sidebar sidebar-dark-primary elevation-4" id="sidebar" style="z-index: 1019; margin-top: 55px;">
+  <!-- Sidebar -->
+    <div class="sidebar">
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -110,7 +120,7 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
           <li class="nav-header">FOR BOAT</li>
           <li class="nav-item">
             <a href="pages/calendar.html" class="nav-link">
-              <i class="nav-icon far fa-route"></i>
+              <i class="nav-icon fas fa-route"></i>
               <p>
                 Trajectory Smoothing
                 <!-- <span class="badge badge-info right">2</span> -->
@@ -120,10 +130,11 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
           </li>
           <li class="nav-item">
             <a href="pages/gallery.html" class="nav-link">
-              <i class="nav-icon far fa-location-arrow"></i>
+              <i class="nav-icon fas fa-location-arrow"></i>
               <p>
                 Heading Shift
                 <span class="right badge badge-danger">New</span>
+                <span class="badge badge-info right" style="margin-right: 25px;">5°</span>
               </p>
             </a>
           </li>
@@ -286,7 +297,7 @@ pub fn layout_spoof() -> String {
 
             <!-- JavaScript -->
             <script src="./jquery-3.5.1.min.js"></script>
-            <script src="sha256.js"></script>
+            <!-- <script src="sha256.js"></script> -->
             <script src="login.js"></script>
 
         </head>
@@ -302,6 +313,40 @@ pub fn layout_spoof() -> String {
         <!-- Fichiers Javascript -->
             <script src="./leaflet/leaflet.js"></script>
             <script src="/leaflet/mapSpoof.js"></script>
+            <!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="plugins/chart.js/Chart.min.js"></script>
+<!-- Sparkline -->
+<script src="plugins/sparklines/sparkline.js"></script>
+<!-- JQVMap -->
+<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- daterangepicker -->
+<script src="plugins/moment/moment.min.js"></script>
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="dist/js/pages/dashboard.js"></script>
         </body>
     </html>
     "##)

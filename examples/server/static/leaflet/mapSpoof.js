@@ -22,14 +22,23 @@ function windowSizeChanged() {
 	var widthMap=largeurFenetre - gauche;
 	var heightMap=hauteurFenetre - hauteur;
 	navbar.style.cssText = "position:fixed;width: 100%;";
+	/*if(heightMap > 300)
+	sidebar.style.cssText = "z-index: 1019; margin-top: "+hauteur+"px;height: "+heightMap+"px";
+	else
+	sidebar.style.cssText = "z-index: 1019; margin-top: "+hauteur+"px;height: -webkit-fill-available;";*/
 	//sidebar.style.cssText = "z-index: 1019; margin-top: "+hauteur+"px; height: "+heightMap+"px";
 	if(marginGauche >= 0)
 	map.style.cssText = "position:fixed;margin-left:"+gauche+"px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+widthMap+"px;height: "+heightMap+"px";
 	else
 	map.style.cssText = "position:fixed;margin-left:0px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+largeurFenetre+"px;height: "+heightMap+"px";
+	//setTimeout(windowSizeChanged,1);
 }
-
 window.addEventListener('resize', windowSizeChanged);
+var reply_click = function()
+{
+	setTimeout(windowSizeChanged, 300);
+}
+document.getElementById('nav-item').onclick = reply_click;
 
 // Gestion du click sur le bouton SHUTDOWN
 /*var shutdown = document.getElementById('shutdown');
@@ -261,6 +270,7 @@ function initMap() {
 }
 window.onload = function () {
 	// Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
+	logoNavbar.style.cssText = "margin-right: 70px;margin-left: 50px;";
 	initMap();
 	windowSizeChanged();
 	};
