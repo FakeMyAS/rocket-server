@@ -110,7 +110,7 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link active">
+            <a href="#" id="real-time" class="nav-link active">
               <i class="nav-icon fas fa-map-marked-alt"></i>
               <p>
                 Real Time
@@ -119,17 +119,16 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
           </li>
           <li class="nav-header">FOR BOAT</li>
           <li class="nav-item">
-            <a href="pages/calendar.html" class="nav-link">
+            <a href="#" id="trajectory" class="nav-link">
               <i class="nav-icon fas fa-route"></i>
               <p>
                 Trajectory Smoothing
-                <!-- <span class="badge badge-info right">2</span> -->
                 <span class="right badge badge-danger">New</span>
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/gallery.html" class="nav-link">
+            <a href="#" id="heading" class="nav-link">
               <i class="nav-icon fas fa-location-arrow"></i>
               <p>
                 Heading Shift
@@ -139,7 +138,7 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/kanban.html" class="nav-link">
+            <a href="#" id="time-shift" class="nav-link">
               <i class="nav-icon fas fa-history"></i>
               <p>
                 Time Shift
@@ -149,7 +148,7 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
           </li>
           <li class="nav-header">FOR CAR</li>
           <li class="nav-item">
-            <a href="iframe.html" class="nav-link">
+            <a href="#" id="road-match" class="nav-link">
               <i class="nav-icon fas fa-road"></i>
               <p>
               Road Matching
@@ -343,10 +342,6 @@ pub fn layout_spoof() -> String {
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard.js"></script>
         </body>
     </html>
     "##)

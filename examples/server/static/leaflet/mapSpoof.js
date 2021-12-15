@@ -1,9 +1,9 @@
 /*eslint-env es6*/
 
 // On initialise la latitude et la longitude de Toulon (centre de la carte)
-var lat = 43.1257311;
-var lon = 5.9304919;
-var alt = 100;
+var lat = 43.29539798528049;
+var lon = 5.374672132925111;
+var alt = 10;
 var time = 0;
 var macarte = null;
 const speed_tab = [2.8, 2.3, 1.8, 1.3, 1.1, 0.5, 0.2];
@@ -12,7 +12,7 @@ var speed_indice = 2;
 var slow_down = 0;
 var speed_up = 0;
 
-
+// Fonction qui adapte la taille de la map sute à un changement de taille de fenêtre ou de sidebar
 function windowSizeChanged() {
 	var largeurFenetre = window.innerWidth;
 	var hauteurFenetre = window.innerHeight;
@@ -22,23 +22,85 @@ function windowSizeChanged() {
 	var widthMap=largeurFenetre - gauche;
 	var heightMap=hauteurFenetre - hauteur;
 	navbar.style.cssText = "position:fixed;width: 100%;";
-	/*if(heightMap > 300)
-	sidebar.style.cssText = "z-index: 1019; margin-top: "+hauteur+"px;height: "+heightMap+"px";
-	else
-	sidebar.style.cssText = "z-index: 1019; margin-top: "+hauteur+"px;height: -webkit-fill-available;";*/
-	//sidebar.style.cssText = "z-index: 1019; margin-top: "+hauteur+"px; height: "+heightMap+"px";
 	if(marginGauche >= 0)
 	map.style.cssText = "position:fixed;margin-left:"+gauche+"px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+widthMap+"px;height: "+heightMap+"px";
 	else
 	map.style.cssText = "position:fixed;margin-left:0px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+largeurFenetre+"px;height: "+heightMap+"px";
 	//setTimeout(windowSizeChanged,1);
 }
+// Détecte le changement de taille de fenêtre
 window.addEventListener('resize', windowSizeChanged);
+
+// Décecte le click sur le bouton "burger" et demande un re-calcul de la taille de la map après que la sidebar ait changé d'état
 var reply_click = function()
 {
+	map.style.cssText = "position:fixed;margin-left:0px;margin-top:0px;margin-right:0px;margin-bottom:0px;width: "+window.innerWidth+"px;height: "+window.innerHeight+"px";
 	setTimeout(windowSizeChanged, 300);
 }
 document.getElementById('nav-item').onclick = reply_click;
+
+
+// Fonction qui surveille les click sur les liens
+[...document.getElementsByTagName("a")].forEach(function(item) {
+	// adding eventListener to the elements
+	item.addEventListener('click', function() {
+	  // calling the methods
+	  // this.id will be the id of the clicked button
+	  // there is a method in the object by same name, which will be trigger
+	  if(obj[this.id])
+	  obj[this.id]();
+  
+	})
+  })
+
+  function httpGet(theUrl)
+  {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.status;
+  }
+  
+  function resetClasses() {
+	document.getElementById('real-time').classList.remove("active");
+	document.getElementById('trajectory').classList.remove("active");
+	document.getElementById('heading').classList.remove("active");
+	document.getElementById('time-shift').classList.remove("active");
+	document.getElementById('road-match').classList.remove("active");
+  }
+
+  var obj = {
+	'real-time': function() {
+		resetClasses();
+	  document.getElementById('real-time').classList.add("active");
+	  console.log(httpGet('http://test/real-time/'));
+	  console.log('Real Time');
+	},
+	'trajectory': function() {
+		resetClasses();
+	  document.getElementById('trajectory').classList.add("active");
+	  console.log(httpGet('http://test/trajectory/'));
+	  console.log('Trajectory Smoothing');
+	},
+	'heading': function() {
+		resetClasses();
+	  document.getElementById('heading').classList.add("active");
+	  console.log(httpGet('http://test/heading/'));
+	  console.log('Heading Shift');
+	},
+	'time-shift': function() {
+		resetClasses();
+	  document.getElementById('time-shift').classList.add("active");
+	  console.log(httpGet('http://test/time-shift/'));
+	  console.log('Time Shift');
+	},
+	'road-match': function() {
+		resetClasses();
+	  document.getElementById('road-match').classList.add("active");
+	  console.log(httpGet('http://test/road-match/'));
+	  console.log('Road Matching');
+	}
+  }
 
 // Gestion du click sur le bouton SHUTDOWN
 /*var shutdown = document.getElementById('shutdown');
