@@ -69,36 +69,104 @@ document.getElementById('nav-item').onclick = reply_click;
 	document.getElementById('road-match').classList.remove("active");
   }
 
+  function getStatus(){
+	  return {
+		'statusRT' : document.getElementById('real-time').classList.contains("active"),
+		'statusT' : document.getElementById('trajectory').classList.contains("active"),
+		'statusH' : document.getElementById('heading').classList.contains("active"),
+		'statusTS' : document.getElementById('time-shift').classList.contains("active"),
+		'statusRM' : document.getElementById('road-match').classList.contains("active")
+	  }
+  }
+
   var obj = {
 	'real-time': function() {
+		var status = getStatus();
+	if (status.statusRT && !status.statusT && !status.statusH && !status.statusRM && !status.statusTS){
 		resetClasses();
+		console.log(httpGet('http://192.168.4.1:12913/?stop'))
+	} else {
+		if (!status.statusT && !status.statusRT && (status.statusH || status.statusRM || status.statusTS)){
+			resetClasses();
+			console.log(httpGet('http://192.168.4.1:12913/?stop'))
+		} else if(status.statusT && !status.statusRT && !status.statusH && !status.statusRM && !status.statusTS){
+			resetClasses();
+			console.log(httpGet('http://192.168.4.1:10000/?stop'))
+		}
 	  document.getElementById('real-time').classList.add("active");
-	  console.log(httpGet('http://test/real-time/'));
+	  console.log(httpGet('http://192.168.4.1:10000/realTime'));
 	  console.log('Real Time');
+	}
 	},
 	'trajectory': function() {
-		resetClasses();
-	  document.getElementById('trajectory').classList.add("active");
-	  console.log(httpGet('http://test/trajectory/'));
-	  console.log('Trajectory Smoothing');
+		var status = getStatus();
+		if (status.statusT && !status.statusRT && !status.statusH && !status.statusRM && !status.statusTS){
+			resetClasses();
+			console.log(httpGet('http://192.168.4.1:10000/?stop'))
+		} else {
+			if (!status.statusT && (status.statusRT || status.statusH || status.statusRM || status.statusTS)){
+				resetClasses();
+				console.log(httpGet('http://192.168.4.1:12913/?stop'))
+			}
+		document.getElementById('trajectory').classList.add("active");
+	  	console.log(httpGet('http://192.168.4.1:10000/trajectorySmoothing'));
+	  	console.log('Trajectory Smoothing');
+	}
+	  
 	},
 	'heading': function() {
-		resetClasses();
+		var status = getStatus();
+		if (status.statusH && !status.statusT && !status.statusRT && !status.statusRM && !status.statusTS){
+			resetClasses();
+			console.log(httpGet('http://192.168.4.1:12913/?stop'))
+		} else {
+			if (!status.statusT && !status.statusH && (status.statusRT || status.statusRM || status.statusTS)){
+				resetClasses();
+				console.log(httpGet('http://192.168.4.1:12913/?stop'))
+			} else if(status.statusT && !status.statusRT && !status.statusH && !status.statusRM && !status.statusTS){
+				resetClasses();
+				console.log(httpGet('http://192.168.4.1:10000/?stop'))
+			}
 	  document.getElementById('heading').classList.add("active");
-	  console.log(httpGet('http://test/heading/'));
+	  console.log(httpGet('http://192.168.4.1:10000/headingShift'));
 	  console.log('Heading Shift');
+		}
 	},
 	'time-shift': function() {
-		resetClasses();
+		var status = getStatus();
+		if (status.statusTS && !status.statusT && !status.statusRT && !status.statusRM && !status.statusH){
+			resetClasses();
+			console.log(httpGet('http://192.168.4.1:12913/?stop'))
+		} else {
+			if (!status.statusT && !status.statusTS && (status.statusH || status.statusRM || status.statusRT)){
+				resetClasses();
+				console.log(httpGet('http://192.168.4.1:12913/?stop'))
+			} else if(status.statusT && !status.statusRT && !status.statusH && !status.statusRM && !status.statusTS){
+				resetClasses();
+				console.log(httpGet('http://192.168.4.1:10000/?stop'))
+			}
 	  document.getElementById('time-shift').classList.add("active");
-	  console.log(httpGet('http://test/time-shift/'));
+	  console.log(httpGet('http://192.168.4.1:10000/timeShift'));
 	  console.log('Time Shift');
+		}
 	},
 	'road-match': function() {
-		resetClasses();
+		var status = getStatus();
+		if (status.statusRM && !status.statusT && !status.statusRT && !status.statusH && !status.statusTS){
+			resetClasses();
+			console.log(httpGet('http://192.168.4.1:12913/?stop'))
+		} else {
+			if (!status.statusT && !status.statusRM && (status.statusH || status.statusRT || status.statusTS)){
+				resetClasses();
+				console.log(httpGet('http://192.168.4.1:12913/?stop'))
+			} else if(status.statusT && !status.statusRT && !status.statusH && !status.statusRM && !status.statusTS){
+				resetClasses();
+				console.log(httpGet('http://192.168.4.1:10000/?stop'))
+			}
 	  document.getElementById('road-match').classList.add("active");
-	  console.log(httpGet('http://test/road-match/'));
+	  console.log(httpGet('http://192.168.4.1:10000/roadMatching'));
 	  console.log('Road Matching');
+		}
 	}
   }
 
@@ -118,7 +186,7 @@ function initMap() {
     // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
     macarte = L.map('map').setView([lat, lon], 8);
     // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer.
-    L.tileLayer('http://localhost:8080/tile/{z}/{x}/{y}.png', {
+    L.tileLayer('http://192.168.4.1:8080/tile/{z}/{x}/{y}.png', {
         // Il est toujours bien de laisser le lien vers la source des données
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
         minZoom: 1
@@ -341,8 +409,8 @@ function sendData(){
     var XHR = new XMLHttpRequest();
 
     // Configuration de la requête
-    // XHR.open('POST', 'http://192.168.4.2:12913/?lat='+lat.toString()+',long='+lon.toString()+',alt='+alt.toString()+',time='+time.toString(), true);
-    XHR.open('POST', 'http://localhost:12913/?lat='+lat.toString()+',long='+lon.toString()+',alt='+alt.toString()+',time='+time.toString(), true);
+    XHR.open('GET', 'http://192.168.4.1:12913/?lat='+lat.toString()+'\\&long='+lon.toString()+'\\&alt='+alt.toString()+'\\&time='+time.toString(), true);
+    //XHR.open('POST', 'http://localhost:12913/?lat='+lat.toString()+'&long='+lon.toString()+'&alt='+alt.toString()+'&time='+time.toString(), true);
 
     // Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
     XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -355,7 +423,7 @@ function sendStop(){
     var XHR = new XMLHttpRequest();
 
     // Configuration de la requête
-    XHR.open('POST', 'http://localhost:12913/?stop', true);
+    XHR.open('POST', 'http://192.168.4.1:12913/?stop', true);
 
     // Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
     XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
