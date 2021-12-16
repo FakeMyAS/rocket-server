@@ -62,41 +62,61 @@ document.getElementById('nav-item').onclick = reply_click;
   }
   
   function resetClasses() {
-	document.getElementById('real-time').classList.remove("active");
-	document.getElementById('trajectory').classList.remove("active");
-	document.getElementById('heading').classList.remove("active");
-	document.getElementById('time-shift').classList.remove("active");
-	document.getElementById('road-match').classList.remove("active");
+	document.getElementById('real-time').removeAttribute("class");
+	document.getElementById('trajectory').removeAttribute("class");
+	document.getElementById('heading').removeAttribute("class");
+	document.getElementById('time-shift').removeAttribute("class");
+	document.getElementById('road-match').removeAttribute("class");
+	document.getElementById('real-time').classList.add("nav-link");
+	document.getElementById('trajectory').classList.add("nav-link");
+	document.getElementById('heading').classList.add("nav-link");
+	document.getElementById('time-shift').classList.add("nav-link");
+	document.getElementById('road-match').classList.add("nav-link");
+  }
+
+  function setActive(id) {
+	document.getElementById(id).classList.remove("waiting");
+	document.getElementById(id).classList.add("active");
+  }
+
+  function setInactive(id) {
+	document.getElementById(id).classList.remove("waiting");
+	document.getElementById(id).classList.add("inactive");
   }
 
   var obj = {
 	'real-time': function() {
 		resetClasses();
-	  document.getElementById('real-time').classList.add("active");
+	  document.getElementById('real-time').classList.add("waiting");
+	  setTimeout("setActive('real-time')", 1000);
 	  console.log(httpGet('http://test/real-time/'));
 	  console.log('Real Time');
 	},
 	'trajectory': function() {
 		resetClasses();
-	  document.getElementById('trajectory').classList.add("active");
+	  document.getElementById('trajectory').classList.add("waiting");
+	  setTimeout("setActive('trajectory')", 1000);
 	  console.log(httpGet('http://test/trajectory/'));
 	  console.log('Trajectory Smoothing');
 	},
 	'heading': function() {
 		resetClasses();
-	  document.getElementById('heading').classList.add("active");
+	  document.getElementById('heading').classList.add("waiting");
+	  setTimeout("setActive('trajectory')", 1000);
 	  console.log(httpGet('http://test/heading/'));
 	  console.log('Heading Shift');
 	},
 	'time-shift': function() {
 		resetClasses();
-	  document.getElementById('time-shift').classList.add("active");
+	  document.getElementById('time-shift').classList.add("waiting");
+	  setTimeout("setActive('trajectory')", 1000);
 	  console.log(httpGet('http://test/time-shift/'));
 	  console.log('Time Shift');
 	},
 	'road-match': function() {
 		resetClasses();
-	  document.getElementById('road-match').classList.add("active");
+	  document.getElementById('road-match').classList.add("waiting");
+	  setTimeout("setActive('trajectory')", 1000);
 	  console.log(httpGet('http://test/road-match/'));
 	  console.log('Road Matching');
 	}
@@ -332,7 +352,7 @@ function initMap() {
 }
 window.onload = function () {
 	// Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
-	logoNavbar.style.cssText = "margin-right: 70px;margin-left: 50px;";
+	logoNavbar.style.cssText = "margin-right: 70px;margin-left: 70px;";
 	initMap();
 	windowSizeChanged();
 	};

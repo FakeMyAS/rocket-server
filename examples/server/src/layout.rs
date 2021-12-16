@@ -110,7 +110,7 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="#" id="real-time" class="nav-link active">
+            <a href="#" id="real-time" class="nav-link">
               <i class="nav-icon fas fa-map-marked-alt"></i>
               <p>
                 Real Time
