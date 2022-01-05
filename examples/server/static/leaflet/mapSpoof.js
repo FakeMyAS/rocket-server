@@ -62,11 +62,26 @@ document.getElementById('nav-item').onclick = reply_click;
   }
   
   function resetClasses() {
-	document.getElementById('real-time').classList.remove("active");
-	document.getElementById('trajectory').classList.remove("active");
-	document.getElementById('heading').classList.remove("active");
-	document.getElementById('time-shift').classList.remove("active");
-	document.getElementById('road-match').classList.remove("active");
+	document.getElementById('real-time').removeAttribute("class");
+	document.getElementById('trajectory').removeAttribute("class");
+	document.getElementById('heading').removeAttribute("class");
+	document.getElementById('time-shift').removeAttribute("class");
+	document.getElementById('road-match').removeAttribute("class");
+	document.getElementById('real-time').classList.add("nav-link");
+	document.getElementById('trajectory').classList.add("nav-link");
+	document.getElementById('heading').classList.add("nav-link");
+	document.getElementById('time-shift').classList.add("nav-link");
+	document.getElementById('road-match').classList.add("nav-link");
+  }
+
+  function setActive(id) {
+	document.getElementById(id).classList.remove("waiting");
+	document.getElementById(id).classList.add("active");
+  }
+
+  function setInactive(id) {
+	document.getElementById(id).classList.remove("waiting");
+	document.getElementById(id).classList.add("inactive");
   }
 
   function getStatus(){
@@ -93,7 +108,8 @@ document.getElementById('nav-item').onclick = reply_click;
 			resetClasses();
 			console.log(httpGet('http://192.168.4.1:10000/?stop'))
 		}
-	  document.getElementById('real-time').classList.add("active");
+	  document.getElementById('real-time').classList.add("waiting");
+	  setTimeout("setActive('real-time')", 1000);
 	  console.log(httpGet('http://192.168.4.1:10000/realTime'));
 	  console.log('Real Time');
 	}
@@ -108,11 +124,12 @@ document.getElementById('nav-item').onclick = reply_click;
 				resetClasses();
 				console.log(httpGet('http://192.168.4.1:12913/?stop'))
 			}
-		document.getElementById('trajectory').classList.add("active");
+		document.getElementById('trajectory').classList.add("waiting");
+	  	setTimeout("setActive('trajectory')", 1000);
 	  	console.log(httpGet('http://192.168.4.1:10000/trajectorySmoothing'));
 	  	console.log('Trajectory Smoothing');
 	}
-	  
+
 	},
 	'heading': function() {
 		var status = getStatus();
@@ -127,7 +144,8 @@ document.getElementById('nav-item').onclick = reply_click;
 				resetClasses();
 				console.log(httpGet('http://192.168.4.1:10000/?stop'))
 			}
-	  document.getElementById('heading').classList.add("active");
+	  document.getElementById('heading').classList.add("waiting");
+	  setTimeout("setActive('heading')", 1000);
 	  console.log(httpGet('http://192.168.4.1:10000/headingShift'));
 	  console.log('Heading Shift');
 		}
@@ -145,7 +163,8 @@ document.getElementById('nav-item').onclick = reply_click;
 				resetClasses();
 				console.log(httpGet('http://192.168.4.1:10000/?stop'))
 			}
-	  document.getElementById('time-shift').classList.add("active");
+	  document.getElementById('time-shift').classList.add("waiting");
+	  setTimeout("setActive('time-shift')", 1000);
 	  console.log(httpGet('http://192.168.4.1:10000/timeShift'));
 	  console.log('Time Shift');
 		}
@@ -163,10 +182,10 @@ document.getElementById('nav-item').onclick = reply_click;
 				resetClasses();
 				console.log(httpGet('http://192.168.4.1:10000/?stop'))
 			}
-	  document.getElementById('road-match').classList.add("active");
+	  document.getElementById('road-match').classList.add("waiting");
+	  setTimeout("setActive('road-match')", 1000);
 	  console.log(httpGet('http://192.168.4.1:10000/roadMatching'));
 	  console.log('Road Matching');
-		}
 	}
   }
 
@@ -400,7 +419,7 @@ function initMap() {
 }
 window.onload = function () {
 	// Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
-	logoNavbar.style.cssText = "margin-right: 70px;margin-left: 50px;";
+	logoNavbar.style.cssText = "margin-right: 70px;margin-left: 70px;";
 	initMap();
 	windowSizeChanged();
 	};
