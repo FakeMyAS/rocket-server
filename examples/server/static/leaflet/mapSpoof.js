@@ -1,6 +1,6 @@
 /*eslint-env es6*/
 
-// On initialise la latitude et la longitude de Toulon (centre de la carte)
+// On initialise la latitude et la longitude de Marseille (centre de la carte)
 var lat = 43.29539798528049;
 var lon = 5.374672132925111;
 var alt = 10;
@@ -11,6 +11,11 @@ const emoji_tab = ['🐌', '🚶', '🏃‍♂️', '🚲', '🚗', '🛩', '�
 var speed_indice = 2;
 var slow_down = 0;
 var speed_up = 0;
+var startRouting = 0;
+var eventGamePad = {
+	latlng: {lat: 0, lng:0}
+}
+
 
 // Fonction qui adapte la taille de la map sute à un changement de taille de fenêtre ou de sidebar
 function windowSizeChanged() {
@@ -67,6 +72,7 @@ document.getElementById('nav-item').onclick = reply_click;
 	document.getElementById('heading').classList.remove("active");
 	document.getElementById('time-shift').classList.remove("active");
 	document.getElementById('road-match').classList.remove("active");
+	startRouting = 0;
   }
 
   function getStatus(){
@@ -186,25 +192,60 @@ function initMap() {
     // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
     macarte = L.map('map').setView([lat, lon], 8);
     // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer.
-    L.tileLayer('http://192.168.4.1:8080/tile/{z}/{x}/{y}.png', {
-        // Il est toujours bien de laisser le lien vers la source des données
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-        minZoom: 1
-    }).addTo(macarte);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGVscGlnIiwiYSI6ImNrdzNkZ3FiNzI0b2oydnFpZjA2bzJjcm8ifQ.u76NrQAgU21c8y6wc7M4ww', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'your.mapbox.access.token'
+	}).addTo(macarte);
+
     // Nous ajoutons un marqueur
-    var marker = L.marker([lat, lon]).addTo(macarte);
+    var marker = L.marker([lat, lon], {clickable:true}).addTo(macarte);
+	// The marker is stored in the global tab
+	markerList.push(marker);
+
     var initLatLng = new L.LatLng(lat, lon);
 		marker.setLatLng(initLatLng).bindPopup('Lat : '+lat+'<br />'+'Long : '+lon,  {
             closeButton: false,
             closeOnClick: false
         }).openPopup();
-    //Ajouter un pin au click
+    // Add pin on click
 	macarte.on('click', addMarker);
 
 	setInterval(getGamepadMove, 100);
 	setInterval(getGamepadButtons, 50);
 
+	L.Routing.control({
+		waypoints: [
+			L.LatLng(lat, lon),
+			L.LatLng(lat, lon)
+		],
+		router: L.Routing.mapbox('pk.eyJ1IjoiZGVscGlnIiwiYSI6ImNrdzNkZ3FiNzI0b2oydnFpZjA2bzJjcm8ifQ.u76NrQAgU21c8y6wc7M4ww')
+		}).addTo(macarte);
+
+	var control = L.Routing.control({
+		waypoints: [
+		],
+		routeWhileDragging: true,
+		waypointMode: 'snap'
+	}).addTo(macarte);
+
+	control.on('routeselected', function(e) {
+		// Retrieve new coordinates
+		end = e.route.coordinates.length
+		console.log(e.route.coordinates[end-1].lat, e.route.coordinates[end-1].lng);
+		updateMarkerPosition(e.route.coordinates[end-1].lat, e.route.coordinates[end-1].lng);
+		lat = e.route.coordinates[end-1].lat;
+		lon = e.route.coordinates[end-1].lng;
+		sendData();});
+
 	function updateMarkerPosition(latitude, longitude){
+		// In the roadMatching mode, we select the destination marker to update it
+		if (document.getElementById('road-match').classList.contains("active")){
+			marker = markerList[markerList.length-1];
+		}
 		var newLatLng = new L.LatLng(latitude, longitude);
 		marker.setLatLng(newLatLng).bindPopup('Lat : '+latitude+'<br />'+'Long : '+longitude,  {
             closeButton: false,
@@ -220,13 +261,23 @@ function initMap() {
 	}
 
 	function addMarker(e){
-		// Move the marker at click location; add popup window
-		updateMarkerPosition(e.latlng.lat, e.latlng.lng);
-		//On appelle la fonction pour envoyer la requête POST
-		lat = e.latlng.lat;
-		lon = e.latlng.lng;
-        sendData();
-
+		// Verify if we are in the RoadMatchingMode
+		if (document.getElementById('road-match').classList.contains("active")){
+			macarte.removeLayer(marker)
+			if (startRouting == 0){
+				control.spliceWaypoints(0, 1, e.latlng);
+				startRouting = 1;
+			} else {
+				control.spliceWaypoints(control.getWaypoints().length - 1, 1, e.latlng);
+			}
+		} else {
+			// Move the marker at click location; add popup window
+			updateMarkerPosition(e.latlng.lat, e.latlng.lng);
+			//On appelle la fonction pour envoyer la requête POST
+			lat = e.latlng.lat;
+			lon = e.latlng.lng;
+			sendData();
+		}
 	}
 
 	function roundDecimal(nombre, precision){
@@ -241,9 +292,6 @@ function initMap() {
     }
 
 	function getGamepadMove() {
-		// Coef of speed. (Ex : 2)
-        //const speed = 1.8;
-
         // Returns up to 4 gamepads.
         const gamepads = navigator.getGamepads();
 
@@ -260,22 +308,20 @@ function initMap() {
         }
 
 		/* GESTION DU DEPLACEMENT MARKER */
-
 		//Axe X pour la longitude
 		if(gamepad.axes[0] < -0.1 || gamepad.axes[0] > 0.1){
-			var newMarkerLongitude = marker.getLatLng().lng + gamepad.axes[0] / Math.pow(speed_tab[speed_indice], macarte.getZoom());
-			newMarkerLongitude = roundDecimal(newMarkerLongitude, 15);
-			lon = newMarkerLongitude;
-			if(newMarkerLongitude > 180)
-				newMarkerLongitude = -180;
-			if(newMarkerLongitude < -180)
-				newMarkerLongitude = 180;
-			updateMarker = 1;
+				var newMarkerLongitude = marker.getLatLng().lng + gamepad.axes[0] / Math.pow(speed_tab[speed_indice], macarte.getZoom());
+				newMarkerLongitude = roundDecimal(newMarkerLongitude, 15);
+				lon = newMarkerLongitude;
+				if(newMarkerLongitude > 180)
+					newMarkerLongitude = -180;
+				if(newMarkerLongitude < -180)
+					newMarkerLongitude = 180;
+				updateMarker = 1;
 		} else {
-			var newMarkerLongitude = marker.getLatLng().lng;
-			lon = newMarkerLongitude;
+				var newMarkerLongitude = marker.getLatLng().lng;
+				lon = newMarkerLongitude;
 		}
-
 		//Axe Y pour la latitude
 		if(gamepad.axes[1] < -0.1 || gamepad.axes[1] > 0.1){
 			var newMarkerLatitude = marker.getLatLng().lat + (gamepad.axes[1]*-1) / Math.pow(speed_tab[speed_indice], macarte.getZoom());
@@ -291,20 +337,27 @@ function initMap() {
 			lat = newMarkerLatitude;
 		}
 
-		if(updateMarker == 1)
-			updateMarkerPosition(newMarkerLatitude, newMarkerLongitude);
+		if(updateMarker == 1){
+			// In the RoadMatching mode, we call addMarker() to update the marker with the right coordinates
+			if (document.getElementById('road-match').classList.contains("active")){
+				eventGamePad.latlng.lat = newMarkerLatitude;
+				eventGamePad.latlng.lng = newMarkerLongitude;
+				addMarker(eventGamePad);
+			} else {
+				updateMarkerPosition(newMarkerLatitude, newMarkerLongitude);
+			}
+		}
 
 		/* GESTION DU DEPLACEMENT MAP */
-
-		//Axe X pour la longitude
+			//Axe X pour la longitude
 		if(gamepad.axes[2] < -0.1 || gamepad.axes[2] > 0.1){
-			var newMapLongitude = macarte.getCenter().lng + gamepad.axes[2] / Math.pow(1.3, macarte.getZoom());
-			newMapLongitude = roundDecimal(newMapLongitude, 3);
-			if(newMapLongitude > 180)
-				newMapLongitude = -180;
-			if(newMapLongitude < -180)
-				newMapLongitude = 180;
-			updateMap = 1;
+				var newMapLongitude = macarte.getCenter().lng + gamepad.axes[2] / Math.pow(1.3, macarte.getZoom());
+				newMapLongitude = roundDecimal(newMapLongitude, 3);
+				if(newMapLongitude > 180)
+					newMapLongitude = -180;
+				if(newMapLongitude < -180)
+					newMapLongitude = 180;
+				updateMap = 1;
 		} else {
 			var newMapLongitude = macarte.getCenter().lng;
 		}
@@ -325,7 +378,9 @@ function initMap() {
 		if(updateMap == 1)
 			macarte.panTo(new L.LatLng(newMapLatitude, newMapLongitude));
 			//updateMapPosition(newMapLatitude, newMapLongitude);
-    }
+	}
+
+	
 
 	function getGamepadButtons() {
         // Returns up to 4 gamepads.
@@ -398,6 +453,7 @@ function initMap() {
         }
     }
 }
+
 window.onload = function () {
 	// Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
 	logoNavbar.style.cssText = "margin-right: 70px;margin-left: 50px;";
@@ -406,28 +462,28 @@ window.onload = function () {
 	};
 
 function sendData(){
-    var XHR = new XMLHttpRequest();
+	var XHR = new XMLHttpRequest();
 
-    // Configuration de la requête
-    XHR.open('GET', 'http://192.168.4.1:12913/?lat='+lat.toString()+'\\&long='+lon.toString()+'\\&alt='+alt.toString()+'\\&time='+time.toString(), true);
-    //XHR.open('POST', 'http://localhost:12913/?lat='+lat.toString()+'&long='+lon.toString()+'&alt='+alt.toString()+'&time='+time.toString(), true);
+	// Configuration de la requête
+	XHR.open('GET', 'http://192.168.4.1:12913/?lat='+lat.toString()+'\\&long='+lon.toString()+'\\&alt='+alt.toString()+'\\&time='+time.toString(), true);
+	//XHR.open('POST', 'http://localhost:12913/?lat='+lat.toString()+'&long='+lon.toString()+'&alt='+alt.toString()+'&time='+time.toString(), true);
 
-    // Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
-    XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	// Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
+	XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    // Envoie des données
-    XHR.send();
+	// Envoie des données
+	XHR.send();
 }
 
 function sendStop(){
-    var XHR = new XMLHttpRequest();
+	var XHR = new XMLHttpRequest();
 
-    // Configuration de la requête
-    XHR.open('POST', 'http://192.168.4.1:12913/?stop', true);
+	// Configuration de la requête
+	XHR.open('POST', 'http://192.168.4.1:12913/?stop', true);
 
-    // Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
-    XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	// Ajout de l'en-tête HTTP requise pour requêtes POST de données de formulaire
+	XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    // Envoie des données
-    XHR.send();
+	// Envoie des données
+	XHR.send();
 }
