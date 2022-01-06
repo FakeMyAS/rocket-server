@@ -18484,6 +18484,7 @@
                             m = null;
                         }
                         this._markers.push(m);
+                        // We push the new marker in our global tab
                         markerList.push(m);
                     }
                 },
