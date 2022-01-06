@@ -293,11 +293,16 @@ pub fn layout_spoof() -> String {
             <!-- Custom CSS -->
             <link id="css-stylesheet" type="text/css" href="css/mapbis.css" rel="stylesheet" />
             <link rel="stylesheet" href="./leaflet/leaflet.css"/>
+            <link rel="stylesheet" href="./leaflet/leaflet-routing-machine.css" />
 
             <!-- JavaScript -->
             <script src="./jquery-3.5.1.min.js"></script>
             <!-- <script src="sha256.js"></script> -->
             <script src="login.js"></script>
+
+            <!-- Make sure you put this AFTER Leaflet's CSS -->
+            <script src="./leaflet/leaflet.js"></script>
+            <script src="./leaflet/leaflet-routing-machine.js"></script>
 
         </head>
         <body>
@@ -310,7 +315,11 @@ pub fn layout_spoof() -> String {
       </div>
         
         <!-- Fichiers Javascript -->
+            <script type="text/javascript">
+            var markerList = [];
+            </script>
             <script src="./leaflet/leaflet.js"></script>
+            <script src="./leaflet/leaflet-routing-machine.js"></script>
             <script src="/leaflet/mapSpoof.js"></script>
             <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
