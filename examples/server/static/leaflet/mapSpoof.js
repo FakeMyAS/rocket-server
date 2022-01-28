@@ -115,7 +115,7 @@ document.getElementById('nav-item').onclick = reply_click;
 		var status = getStatus();
 		if (status.statusT && !status.statusRT && !status.statusH && !status.statusRM && !status.statusTS){
 			resetClasses();
-			console.log(httpGet('http://192.168.4.1:10000/?stop'))
+			console.log(httpGet('http://192.168.4.1:12913/?stop'))
 		} else {
 			if (!status.statusT && (status.statusRT || status.statusH || status.statusRM || status.statusTS)){
 				resetClasses();
