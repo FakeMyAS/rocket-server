@@ -15,6 +15,9 @@ var startRouting = 0;
 var eventGamePad = {
 	latlng: {lat: 0, lng:0}
 }
+var trajectoryComplete = 0;
+let trajectory_tab = [];
+let trajectory_mark = [];
 
 
 // Fonction qui adapte la taille de la map sute à un changement de taille de fenêtre ou de sidebar
@@ -61,7 +64,7 @@ document.getElementById('nav-item').onclick = reply_click;
   function httpGet(theUrl)
   {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.open( "GET", theUrl, true ); // false for synchronous request
     xmlHttp.send( null );
     return xmlHttp.status;
   }
@@ -72,6 +75,10 @@ document.getElementById('nav-item').onclick = reply_click;
 	document.getElementById('heading').classList.remove("active");
 	document.getElementById('time-shift').classList.remove("active");
 	document.getElementById('road-match').classList.remove("active");
+	if(trajectory_mark.length != 0) {
+		resetMarkerTrajectory();
+	}
+	document.getElementById("trajectoryValidation").hidden = true;
 	startRouting = 0;
   }
 
@@ -270,6 +277,28 @@ function initMap() {
 			} else {
 				control.spliceWaypoints(control.getWaypoints().length - 1, 1, e.latlng);
 			}
+		} else if (document.getElementById('trajectory').classList.contains("active") && trajectoryComplete == 0){
+			lat = e.latlng.lat;
+			lon = e.latlng.lng;
+			// Add a marker at click location
+			var m = L.marker([lat, lon], {clickable:true}).addTo(macarte);
+			// Add popup
+			var newLatLng = new L.LatLng(lat, lon);
+			m.setLatLng(newLatLng).bindPopup('Lat : '+lat+'<br />'+'Long : '+lon,  {
+				closeButton: false,
+				closeOnClick: false
+       		 }).openPopup();
+			// Add in a table
+			trajectory_tab.push(newLatLng);
+			trajectory_mark.push(m);
+			console.log(trajectory_mark.length);
+			// Make visible send button
+			if (trajectory_mark.length == 3) {
+				document.getElementById("trajectoryValidation").hidden = false;
+			}
+			
+		} else if (document.getElementById('trajectory').classList.contains("active") && trajectoryComplete == 1){
+			sendJson();
 		} else {
 			// Move the marker at click location; add popup window
 			updateMarkerPosition(e.latlng.lat, e.latlng.lng);
@@ -280,6 +309,10 @@ function initMap() {
 		}
 	}
 
+	function change_trajectory_state(){
+		trajectoryComplete = 1;
+	}
+	
 	function roundDecimal(nombre, precision){
 		if(precision == null)
 			precision = 2;
@@ -461,6 +494,17 @@ window.onload = function () {
 	windowSizeChanged();
 	};
 
+function resetMarkerTrajectory() {
+	// Enlever les marqueurs
+	trajectory_mark.forEach(function(item, index, array) {
+		macarte.removeLayer(item);
+	});
+	// Vider le tableau des marqueurs
+	trajectory_mark.splice(0, trajectory_mark.length);
+	// Vider le tableau des positions
+	trajectory_tab.splice(0, trajectory_tab.length);
+}
+
 function sendData(){
 	var XHR = new XMLHttpRequest();
 
@@ -474,6 +518,34 @@ function sendData(){
 	// Envoie des données
 	XHR.send();
 }
+
+function sendJson(){
+	// Vérifier si tableau vide
+	if (trajectory_tab.length != 0) {
+		// Transformer tableau en JSON
+		var Json_Tab = JSON.stringify(trajectory_tab);
+		// Envoyer JSON au 192.168.4.1:10000
+		var XHR = new XMLHttpRequest();
+		//var URL = "http://192.168.4.1:10000/";
+		var URL = "http://localhost:10000/trajectorySmoothing?data="+Json_Tab;
+		XHR.open("POST", URL, true);
+		XHR.setRequestHeader("Accept", "application/json");
+		XHR.setRequestHeader("Content-Type", "application/json");
+
+		XHR.onreadystatechange = function () {
+			if (XHR.readyState == 4) {
+				console.log(XHR.responseText);
+			}
+		};
+
+		XHR.send();
+		console.log(Json_Tab);
+		// Cacher bouton
+		document.getElementById("trajectoryValidation").hidden = true;
+		// Reset des tableaux
+		resetMarkerTrajectory();
+	}
+} 
 
 function sendStop(){
 	var XHR = new XMLHttpRequest();
