@@ -199,7 +199,7 @@ function initMap() {
     // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
     macarte = L.map('map').setView([lat, lon], 8);
     // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer.
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGVscGlnIiwiYSI6ImNrdzNkZ3FiNzI0b2oydnFpZjA2bzJjcm8ifQ.u76NrQAgU21c8y6wc7M4ww', {
+    L.tileLayer('http://192.168.4.1:8080/tile/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
     id: 'mapbox/streets-v11',
@@ -526,8 +526,7 @@ function sendJson(){
 		var Json_Tab = JSON.stringify(trajectory_tab);
 		// Envoyer JSON au 192.168.4.1:10000
 		var XHR = new XMLHttpRequest();
-		//var URL = "http://192.168.4.1:10000/";
-		var URL = "http://localhost:10000/trajectorySmoothing?data="+Json_Tab;
+		var URL = "http://192.168.4.1:10000/trajectorySmoothing?data="+Json_Tab;
 		XHR.open("POST", URL, true);
 		XHR.setRequestHeader("Accept", "application/json");
 		XHR.setRequestHeader("Content-Type", "application/json");
