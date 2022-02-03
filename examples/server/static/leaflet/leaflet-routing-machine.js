@@ -17910,7 +17910,7 @@
              */
             module.exports = L.Class.extend({
                 options: {
-                    serviceUrl: 'http://192.168.4.1:5000/route/v1',
+                    serviceUrl: 'http://127.0.0.1:5001/route/v1',
                     profile: 'driving',
                     timeout: 30 * 1000,
                     routingOptions: {
