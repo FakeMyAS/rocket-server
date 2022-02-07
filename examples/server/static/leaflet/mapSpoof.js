@@ -123,6 +123,8 @@ document.getElementById('nav-item').onclick = reply_click;
 		}
 	  document.getElementById('real-time').classList.add("active");
 	  console.log(httpGet('http://localhost:10000/realTime'));
+	  macarte.remove();
+	  initMap();
 	  console.log('Real Time');
 	}
 	},
@@ -138,6 +140,8 @@ document.getElementById('nav-item').onclick = reply_click;
 			}
 		document.getElementById('trajectory').classList.add("active");
 	  	console.log(httpGet('http://localhost:10000/trajectorySmoothing'));
+		macarte.remove();
+		initMap();
 	  	console.log('Trajectory Smoothing');
 	}
 	  
@@ -193,6 +197,8 @@ document.getElementById('nav-item').onclick = reply_click;
 			}
 	  document.getElementById('road-match').classList.add("active");
 	  console.log(httpGet('http://localhost:10000/roadMatching'));
+	  macarte.remove();
+	  initMap();
 	  console.log('Road Matching');
 		}
 	}
