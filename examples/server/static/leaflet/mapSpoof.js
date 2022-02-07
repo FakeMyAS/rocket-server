@@ -22,6 +22,7 @@ let trajectory_mark = [];
 
 // Fonction qui adapte la taille de la map sute à un changement de taille de fenêtre ou de sidebar
 function windowSizeChanged() {
+	//Gestion map
 	var largeurFenetre = window.innerWidth;
 	var hauteurFenetre = window.innerHeight;
 	var hauteur=document.getElementById("navbar").offsetHeight; 
@@ -30,11 +31,26 @@ function windowSizeChanged() {
 	var widthMap=largeurFenetre - gauche;
 	var heightMap=hauteurFenetre - hauteur;
 	navbar.style.cssText = "position:fixed;width: 100%;";
-	if(marginGauche >= 0)
-	map.style.cssText = "position:fixed;margin-left:"+gauche+"px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+widthMap+"px;height: "+heightMap+"px";
-	else
-	map.style.cssText = "position:fixed;margin-left:0px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+largeurFenetre+"px;height: "+heightMap+"px";
+	if(marginGauche >= 0) {
+		//Gestion bouton send
+		console.log(document.getElementById("sidebar").offsetWidth);
+		if(document.getElementById("sidebar").offsetWidth > 79){
+			document.getElementById("sendTrajectory").innerHTML = '<i class="nav-icon fas fa-upload"></i> Send';
+			document.getElementById("sendTrajectory").style.cssText = "width:280px;bottom:0;left:10px;position:fixed;margin-bottom:10px";
+			console.log("280px");
+		} else {
+			document.getElementById("sendTrajectory").innerHTML = '<i class="nav-icon fas fa-upload"></i>';
+			document.getElementById("sendTrajectory").style.cssText = "width:54px;bottom:0;left:10px;position:fixed;margin-bottom:10px";
+			console.log("54px");
+		}
+		map.style.cssText = "position:fixed;margin-left:"+gauche+"px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+widthMap+"px;height: "+heightMap+"px";
+	} else {
+		document.getElementById("sendTrajectory").innerHTML = '<i class="nav-icon fas fa-upload"></i>';
+		document.getElementById("sendTrajectory").style.cssText = "width:54px;bottom:0;left:10px;position:fixed;margin-bottom:10px";
+		map.style.cssText = "position:fixed;margin-left:0px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+largeurFenetre+"px;height: "+heightMap+"px";
+	}
 	//setTimeout(windowSizeChanged,1);
+	document.getElementById("sendTrajectory").style.removeProperty('display');
 }
 // Détecte le changement de taille de fenêtre
 window.addEventListener('resize', windowSizeChanged);
@@ -43,7 +59,8 @@ window.addEventListener('resize', windowSizeChanged);
 var reply_click = function()
 {
 	map.style.cssText = "position:fixed;margin-left:0px;margin-top:0px;margin-right:0px;margin-bottom:0px;width: "+window.innerWidth+"px;height: "+window.innerHeight+"px";
-	setTimeout(windowSizeChanged, 300);
+	document.getElementById("sendTrajectory").style.display = "none";
+	setTimeout(windowSizeChanged, 350);
 }
 document.getElementById('nav-item').onclick = reply_click;
 
@@ -238,6 +255,7 @@ function initMap() {
 		routeWhileDragging: true,
 		waypointMode: 'snap'
 	}).addTo(macarte);
+	//control._container.style.display = "None";
 
 	control.on('routeselected', function(e) {
 		// Retrieve new coordinates

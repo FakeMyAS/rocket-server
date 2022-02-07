@@ -16767,7 +16767,7 @@
                     if (collapsible) {
                         this.options.collapseBtn(this);
                     }
-        
+                    //_container.style.display = "None";
                     return this._container;
                 },
         
