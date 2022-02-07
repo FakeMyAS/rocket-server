@@ -22,7 +22,6 @@ let trajectory_mark = [];
 
 // Fonction qui adapte la taille de la map sute à un changement de taille de fenêtre ou de sidebar
 function windowSizeChanged() {
-	//Gestion map
 	var largeurFenetre = window.innerWidth;
 	var hauteurFenetre = window.innerHeight;
 	var hauteur=document.getElementById("navbar").offsetHeight; 
@@ -33,23 +32,21 @@ function windowSizeChanged() {
 	navbar.style.cssText = "position:fixed;width: 100%;";
 	if(marginGauche >= 0) {
 		//Gestion bouton send
-		console.log(document.getElementById("sidebar").offsetWidth);
 		if(document.getElementById("sidebar").offsetWidth > 79){
 			document.getElementById("sendTrajectory").innerHTML = '<i class="nav-icon fas fa-upload"></i> Send';
 			document.getElementById("sendTrajectory").style.cssText = "width:280px;bottom:0;left:10px;position:fixed;margin-bottom:10px";
-			console.log("280px");
 		} else {
 			document.getElementById("sendTrajectory").innerHTML = '<i class="nav-icon fas fa-upload"></i>';
 			document.getElementById("sendTrajectory").style.cssText = "width:54px;bottom:0;left:10px;position:fixed;margin-bottom:10px";
-			console.log("54px");
 		}
+		//Gestion map
 		map.style.cssText = "position:fixed;margin-left:"+gauche+"px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+widthMap+"px;height: "+heightMap+"px";
 	} else {
 		document.getElementById("sendTrajectory").innerHTML = '<i class="nav-icon fas fa-upload"></i>';
 		document.getElementById("sendTrajectory").style.cssText = "width:54px;bottom:0;left:10px;position:fixed;margin-bottom:10px";
 		map.style.cssText = "position:fixed;margin-left:0px;margin-top:"+hauteur+"px;margin-right:0px;margin-bottom:0px;width: "+largeurFenetre+"px;height: "+heightMap+"px";
 	}
-	//setTimeout(windowSizeChanged,1);
+	//Affichage du bouton send
 	document.getElementById("sendTrajectory").style.removeProperty('display');
 }
 // Détecte le changement de taille de fenêtre
@@ -59,6 +56,7 @@ window.addEventListener('resize', windowSizeChanged);
 var reply_click = function()
 {
 	map.style.cssText = "position:fixed;margin-left:0px;margin-top:0px;margin-right:0px;margin-bottom:0px;width: "+window.innerWidth+"px;height: "+window.innerHeight+"px";
+	//On cache le bouton send pendant la transition
 	document.getElementById("sendTrajectory").style.display = "none";
 	setTimeout(windowSizeChanged, 350);
 }

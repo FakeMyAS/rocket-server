@@ -639,10 +639,5 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	border-right-color: #fff;
 	}
 .leaflet-routing-container {
-<<<<<<< HEAD
-	display: none;
-}
-=======
     display: none;
 }
->>>>>>> fa95108de3f584582f8eea0bd141a9a025be3b90

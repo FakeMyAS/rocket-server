@@ -156,12 +156,10 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
               </p>
             </a>
           </li>
-          <!--<button type="button" class="btn btn-success">Success</button>-->
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
       <div id="trajectoryValidation" hidden="">
-            <!-- <button id="sendTrajectory" class="right badge" style="height:20px; width:50px; position:relative; float:right; margin-right:15px;" onClick="sendJson()">Send</button> -->
             <button type="button" id="sendTrajectory" class="btn btn-success" onClick="sendJson()" style="width:280px;bottom:0;left:10px;position:fixed;margin-bottom:10px"><i class="nav-icon fas fa-upload"></i> Send</button>
           </div>
     </div>
