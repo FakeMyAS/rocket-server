@@ -90,11 +90,12 @@ pub const LAYOUT_HEADER: &'static str = r##"
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/map">Map</a></li>
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/spoofing">Spoofing</a></li>
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/logout">Logout</a></li>
-                                                  
+                        
                         <!-- <li class="v-nav-item nav-item"><a class="nav-link disabled" href="#">Disabled</a></li> -->
                     </ul>
                     
                 </div>
+                <i class="nav-icon fas fa-power-off" onclick="askShutdown()" style="right: 0px;top: 0px;margin-right: 10px;font-size: large;"></i>
             </nav>
                         
 "##;
@@ -185,6 +186,13 @@ pub const LAYOUT_FOOTER: &'static str = r##"
         
         <!-- Custom JavaScript -->
         <script>
+        function askShutdown() {
+          let text = "Do you really want to turn off the system?\n⚠️ This will require a manual start of the hardware.";
+          if (confirm(text) == true) {
+            console.log(httpGet('http://192.168.4.1:10000/stopFMA'));
+            document.location.href="/logout";
+          }
+        }
         </script>
         
     </body>
