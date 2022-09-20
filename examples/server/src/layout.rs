@@ -90,11 +90,12 @@ pub const LAYOUT_HEADER: &'static str = r##"
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/map">Map</a></li>
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/spoofing">Spoofing</a></li>
                         <li class="v-nav-item nav-item active"><a class="nav-link" href="/logout">Logout</a></li>
-                                                  
+                        
                         <!-- <li class="v-nav-item nav-item"><a class="nav-link disabled" href="#">Disabled</a></li> -->
                     </ul>
                     
                 </div>
+                <i class="nav-icon fas fa-power-off" onclick="askShutdown()" style="right: 0px;top: 0px;margin-right: 10px;font-size: large;"></i>
             </nav>
                         
 "##;
@@ -159,6 +160,9 @@ pub const LAYOUT_SIDEBAR: &'static str = r##"
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
+      <div id="trajectoryValidation" hidden="">
+            <button type="button" id="sendTrajectory" class="btn btn-success" onClick="sendJson()" style="width:280px;bottom:0;left:10px;position:fixed;margin-bottom:10px"><i class="nav-icon fas fa-upload"></i> Send</button>
+          </div>
     </div>
     <!-- /.sidebar -->
   </aside>
@@ -182,6 +186,13 @@ pub const LAYOUT_FOOTER: &'static str = r##"
         
         <!-- Custom JavaScript -->
         <script>
+        function askShutdown() {
+          let text = "Do you really want to turn off the system?\n⚠️ This will require a manual start of the hardware.";
+          if (confirm(text) == true) {
+            console.log(httpGet('http://192.168.4.1:10000/stopFMA'));
+            document.location.href="/logout";
+          }
+        }
         </script>
         
     </body>
@@ -293,11 +304,16 @@ pub fn layout_spoof() -> String {
             <!-- Custom CSS -->
             <link id="css-stylesheet" type="text/css" href="css/mapbis.css" rel="stylesheet" />
             <link rel="stylesheet" href="./leaflet/leaflet.css"/>
+            <link rel="stylesheet" href="./leaflet/leaflet-routing-machine.css" />
 
             <!-- JavaScript -->
             <script src="./jquery-3.5.1.min.js"></script>
             <!-- <script src="sha256.js"></script> -->
             <script src="login.js"></script>
+
+            <!-- Make sure you put this AFTER Leaflet's CSS -->
+            <script src="./leaflet/leaflet.js"></script>
+            <script src="./leaflet/leaflet-routing-machine.js"></script>
 
         </head>
         <body>
@@ -310,7 +326,11 @@ pub fn layout_spoof() -> String {
       </div>
         
         <!-- Fichiers Javascript -->
+            <script type="text/javascript">
+            var markerList = [];
+            </script>
             <script src="./leaflet/leaflet.js"></script>
+            <script src="./leaflet/leaflet-routing-machine.js"></script>
             <script src="/leaflet/mapSpoof.js"></script>
             <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
