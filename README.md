@@ -179,6 +179,14 @@ The login processing route will be a `post` route that
 # Security
 The library will send passwords in plaintext.  It is highly recommended that you use TLS.  There is even an example showing how to use tls with this crate.  The changes are minimal.  If you absolutely need to hash a password before the password is sent the examples all include a sha256.js file from [http://www.movable-type.co.uk/scripts/sha256.html]([http://www.movable-type.co.uk/scripts/sha256.html](http://www.movable-type.co.uk/scripts/sha256.html)) which can be used for that very purpose.  Also the login.js file contains commented out code around line 15 that can be used to hash the password before sending it using the sha256.js file.  This method is extremely discouraged.  Sha hashes are fast, and thus very susceptible to rainbow table attacks.  Without using TLS the security is almost the same as plaintext when using just a hashed password. Use TLS.  [Let's Encrypt](https://letsencrypt.org/)) offers free certificates so there's no reason not to use https for production purposes.
 
+## License
+Copyright &copy; 2021-2022 FakeMyAS
 
-**Copyright Note**: The Rocket-auth-login crate and Rust code examples are licensed under the Apache 2.0 license.  However the layout/design in the examples was created by me.  You can use it however if you put in at least an HTML comment inside the HTML output saying Design &copy; 2017 Andrew Prindle.
-The rest of the application you may use without any kind of credit displayed to users but must follow the terms of the Apache 2.0 license.
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
+
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
+
+[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
